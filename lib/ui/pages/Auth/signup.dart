@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'firsttime.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -40,8 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     key: const Key('TextFormFieldSignUpUsername'),
                     controller: _usernameController,
                     decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Username'),
+                        border: UnderlineInputBorder(), labelText: 'Username'),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Enter username";
@@ -57,8 +57,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: const Key('TextFormFieldSignUpEmail'),
                   controller: _emailController,
                   decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: 'Email'),
+                      border: UnderlineInputBorder(), labelText: 'Email'),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Enter email";
@@ -75,8 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: const Key('TextFormFieldSignUpPassword'),
                   controller: _passwordController,
                   decoration: const InputDecoration(
-                    border: UnderlineInputBorder(),
-                    labelText: "Password"),
+                      border: UnderlineInputBorder(), labelText: "Password"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   validator: (value) {
@@ -99,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       final form = _formKey.currentState;
                       form!.save();
                       if (form.validate()) {
-                        //Get.OffAll(firstime)
+                       Get.to(const MetasPage());  //Get.OffAll(firstime)
                       } else {
                         const snackBar = SnackBar(
                           content: Text('Validation nok'),
