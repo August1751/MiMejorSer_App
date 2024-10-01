@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../../Classess/metas.dart';
+import '../../Classess/metas_booleans.dart';
+import '../../Classess/metas_quantification.dart';
 
 class MetasPage extends StatefulWidget {
   const MetasPage({Key? key}) : super(key: key);
@@ -9,38 +11,67 @@ class MetasPage extends StatefulWidget {
 }
 
 class _MetasPageState extends State<MetasPage> {
-  final List<String> _metas = [
-    'Hidratarse',
-    'Dormir Siesta',
-    'Comer frutas',
-    'Hacer ejercicio',
-    'Leer un libro'
+  final List<Meta> _metas = [
+    MetaBooleana('Hidratarse', false),
+    MetaBooleana('Dormir siesta', false),
+    MetaCuantificable('Comer frutas', 0, 3),
+    MetaBooleana('Hacer ejercicio', false),
+    MetaBooleana('Leer un libro', false)
   ];
 
   // Lista para manejar si cada meta está completada o no (estado del checkbox)
   final List<bool> _completadas = List.generate(5, (_) => false);
 
-  // Método para agregar una nueva meta
-  void _addMeta(String nuevaMeta) {
-    setState(() {
-      _metas.add(nuevaMeta);
-      _completadas.add(false); // Nueva meta con estado no completado
-    });
-  }
-
-  // Método para mostrar el cuadro de diálogo y agregar una nueva meta
   Future<void> _mostrarDialogoAgregarMeta() async {
     String nuevaMeta = '';
+    bool esCuantificable = false;
+    double valorObjetivo = 0.0; // Para el valor objetivo si es cuantificable
+
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Nueva Meta'),
-          content: TextField(
-            onChanged: (value) {
-              nuevaMeta = value;
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setDialogState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Campo para ingresar el nombre de la meta
+                  TextField(
+                    onChanged: (value) {
+                      nuevaMeta = value;
+                    },
+                    decoration: const InputDecoration(hintText: 'Escribe una meta'),
+                  ),
+                  const SizedBox(height: 10),
+                  // Checkbox para seleccionar si la meta es cuantificable
+                  Row(
+                    children: <Widget>[
+                      const Text('¿Es cuantificable?'),
+                      Checkbox(
+                        value: esCuantificable,
+                        onChanged: (bool? value) {
+                          // Aquí actualizamos el estado del diálogo
+                          setDialogState(() {
+                            esCuantificable = value ?? false;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  // Campo para ingresar el valor objetivo si es cuantificable
+                  if (esCuantificable)
+                    TextField(
+                      onChanged: (value) {
+                        valorObjetivo = double.tryParse(value) ?? 0.0;
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(hintText: 'Valor objetivo'),
+                    ),
+                ],
+              );
             },
-            decoration: const InputDecoration(hintText: 'Escribe una meta'),
           ),
           actions: <Widget>[
             TextButton(
@@ -53,7 +84,11 @@ class _MetasPageState extends State<MetasPage> {
               child: const Text('Agregar'),
               onPressed: () {
                 if (nuevaMeta.isNotEmpty) {
-                  _addMeta(nuevaMeta);
+                  if (esCuantificable) {
+                    _addMetaCuantificable(nuevaMeta, valorObjetivo);
+                  } else {
+                    _addMetaBooleana(nuevaMeta);
+                  }
                 }
                 Navigator.of(context).pop();
               },
@@ -62,6 +97,25 @@ class _MetasPageState extends State<MetasPage> {
         );
       },
     );
+  }
+
+  // Función para agregar una meta booleana
+  void _addMetaBooleana(String nombreMeta) {
+    setState(() {
+      MetaBooleana nuevaMetaBooleana = MetaBooleana(nombreMeta, false);
+      _metas.add(nuevaMetaBooleana);
+      _completadas.add(false); // Agregamos un valor inicial para el checkbox
+    });
+  }
+
+  // Función para agregar una meta cuantificable
+  void _addMetaCuantificable(String nombreMeta, double valorObjetivo) {
+    setState(() {
+      MetaCuantificable nuevaMetaCuantificable =
+          MetaCuantificable(nombreMeta, 0.0, valorObjetivo);
+      _metas.add(nuevaMetaCuantificable);
+      _completadas.add(false); // Agregamos un valor inicial para el checkbox
+    });
   }
 
   @override
@@ -105,7 +159,8 @@ class _MetasPageState extends State<MetasPage> {
                           style: TextStyle(color: Colors.deepPurple),
                         ),
                       ),
-                      title: Text(_metas[index]),
+                      // Aquí accedemos al nombre de la meta
+                      title: Text(_metas[index].nombre),
                       trailing: Checkbox(
                         value: _completadas[index],
                         onChanged: (bool? value) {
