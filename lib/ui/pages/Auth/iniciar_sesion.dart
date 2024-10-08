@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../HomePage/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key, required this.email, required this.password})
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (form.validate()) {
                         if (widget.email == _emailController.text &&
                             widget.password == _passwordController.text) {
-                          //Get.OfAll(homepage)
+                              Get.to(Home());
                         } else {
                           const snackBar = SnackBar(
                             content: Text('User or passwor nok'),

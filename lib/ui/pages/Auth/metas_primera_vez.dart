@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../Classess/metas.dart';
-import '../../Classess/metas_booleans.dart';
-import '../../Classess/metas_quantification.dart';
+import '../../Classess/metas_booleana.dart';
+import '../../Classess/metas_cuantificable.dart';
+import '../HomePage/home.dart';
 
 class MetasPage extends StatefulWidget {
   const MetasPage({Key? key}) : super(key: key);
@@ -189,7 +191,7 @@ class _MetasPageState extends State<MetasPage> {
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
-              // Puedes agregar la funcionalidad para "guardar" las metas
+              Get.to(Home());
             },
             backgroundColor: Colors.deepPurple,
             child: const Icon(Icons.check),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'home.dart'; // Importa el archivo nuevo
+import 'ui/pages/HomePage/home.dart'; // Importa el archivo nuevo
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(), // Utiliza la pantalla de login
+      home: Home(), // Utiliza la pantalla de login
     );
   }
 }
