@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Controllers/metas_controller.dart';
+import '../Controllers/metas_controller.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -16,7 +16,31 @@ class Home extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: 20), // Espacio superior
-
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[300], // Fondo gris
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Mi Tienda',
+                      style: TextStyle(
+                        color: Colors.purple, // Texto morado
+                        fontSize: 24,
+                      ),
+                    ),
+                    Container(
+                      width: 30,
+                      height: 30,
+                      color: Colors.purple, // Cuadrado morado
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
               // Usamos un Expanded para hacer que el grid ocupe el espacio restante
               Expanded(
                 child: GridView.count(
@@ -25,42 +49,11 @@ class Home extends StatelessWidget {
                   mainAxisSpacing: 16,
                   childAspectRatio: 1, // Relación de aspecto 1:1
                   children: [
-                    // "Mi Tienda" ocupará las dos columnas
-                    GridTile(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300], // Fondo gris
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Mi Tienda',
-                              style: TextStyle(
-                                color: Colors.purple, // Texto morado
-                                fontSize: 24,
-                              ),
-                            ),
-                            Container(
-                              width: 30,
-                              height: 30,
-                              color: Colors.purple, // Cuadrado morado
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Añadimos un SizedBox para hacer que "Mi Tienda" ocupe toda la fila
-                    SizedBox.shrink(),
-
                     // Ítems del grid
                     if (selectedGoals != null)
                       ...selectedGoals.map((meta) {
-                        print(meta);
                         return GoalGridItem(meta: meta); // Display each goal
-                      }).toList(),
+                      }),
 
                     // You can keep other grid items here if needed
                   ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'Auth/iniciar_sesion.dart';
+import 'iniciar_sesion.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

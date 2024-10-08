@@ -48,6 +48,10 @@ class MetasController extends GetxController {
   // Observable list of metas
   var metas = <Meta>[].obs;
 
+  void addMeta(Meta meta){
+    metas.add(meta);
+  }
+
   // Method to add a boolean goal
   void addMetaBooleana(String nombre) {
     metas.add(MetaBooleana(nombre));
@@ -74,7 +78,7 @@ class MetasController extends GetxController {
 }
 
 class MetasPageController extends GetxController {
-  // Observable lists for metas and completadas
+  // Observable lists for metas and selected
   var metas = <Meta>[].obs;
   var selected = <bool>[].obs;
 

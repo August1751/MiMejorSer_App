@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'registrarse.dart';
-import '../../Controllers/login_controller.dart';
+import '../Controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key, required this.email, required this.password}) : super(key: key);

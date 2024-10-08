@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Controllers/metas_controller.dart';
-import '../HomePage/home.dart';
+import '../Controllers/metas_controller.dart';
+import 'home.dart';
 
 class MetasPage extends StatelessWidget {
   MetasPage({Key? key}) : super(key: key);
@@ -88,7 +88,7 @@ class MetasPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Metas'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -148,7 +148,7 @@ class MetasPage extends StatelessWidget {
         children: [FloatingActionButton(
             onPressed: () => _mostrarDialogoAgregarMeta(context),
             backgroundColor: Colors.deepPurple,
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add,color:Colors.white),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
@@ -166,7 +166,7 @@ class MetasPage extends StatelessWidget {
               Get.to(Home(), arguments: selectedGoals);
             },
             backgroundColor: Colors.deepPurple,
-            child: const Icon(Icons.check),
+            child: const Icon(Icons.check,color:Colors.white),
           ),
         ],
       ),
