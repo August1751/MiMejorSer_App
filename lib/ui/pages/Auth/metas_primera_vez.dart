@@ -1,33 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../Classess/metas.dart';
-import '../../Classess/metas_booleana.dart';
-import '../../Classess/metas_cuantificable.dart';
+import '../../Controllers/metas_controller.dart';
 import '../HomePage/home.dart';
 
-class MetasPage extends StatefulWidget {
-  const MetasPage({Key? key}) : super(key: key);
+class MetasPage extends StatelessWidget {
+  MetasPage({Key? key}) : super(key: key);
 
-  @override
-  State<MetasPage> createState() => _MetasPageState();
-}
+  final MetasPageController _controller = Get.put(MetasPageController());
 
-class _MetasPageState extends State<MetasPage> {
-  final List<Meta> _metas = [
-    MetaBooleana('Hidratarse', false),
-    MetaBooleana('Dormir siesta', false),
-    MetaCuantificable('Comer frutas', 0, 3),
-    MetaBooleana('Hacer ejercicio', false),
-    MetaBooleana('Leer un libro', false)
-  ];
-
-  // Lista para manejar si cada meta está completada o no (estado del checkbox)
-  final List<bool> _completadas = List.generate(5, (_) => false);
-
-  Future<void> _mostrarDialogoAgregarMeta() async {
+  Future<void> _mostrarDialogoAgregarMeta(BuildContext context) async {
     String nuevaMeta = '';
     bool esCuantificable = false;
-    double valorObjetivo = 0.0; // Para el valor objetivo si es cuantificable
+    double valorObjetivo = 0.0;
 
     await showDialog(
       context: context,
@@ -39,22 +23,20 @@ class _MetasPageState extends State<MetasPage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Campo para ingresar el nombre de la meta
                   TextField(
                     onChanged: (value) {
                       nuevaMeta = value;
                     },
-                    decoration: const InputDecoration(hintText: 'Escribe una meta'),
+                    decoration:
+                        const InputDecoration(hintText: 'Escribe una meta'),
                   ),
                   const SizedBox(height: 10),
-                  // Checkbox para seleccionar si la meta es cuantificable
                   Row(
                     children: <Widget>[
                       const Text('¿Es cuantificable?'),
                       Checkbox(
                         value: esCuantificable,
                         onChanged: (bool? value) {
-                          // Aquí actualizamos el estado del diálogo
                           setDialogState(() {
                             esCuantificable = value ?? false;
                           });
@@ -62,14 +44,14 @@ class _MetasPageState extends State<MetasPage> {
                       ),
                     ],
                   ),
-                  // Campo para ingresar el valor objetivo si es cuantificable
                   if (esCuantificable)
                     TextField(
                       onChanged: (value) {
                         valorObjetivo = double.tryParse(value) ?? 0.0;
                       },
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(hintText: 'Valor objetivo'),
+                      decoration:
+                          const InputDecoration(hintText: 'Valor objetivo'),
                     ),
                 ],
               );
@@ -87,9 +69,9 @@ class _MetasPageState extends State<MetasPage> {
               onPressed: () {
                 if (nuevaMeta.isNotEmpty) {
                   if (esCuantificable) {
-                    _addMetaCuantificable(nuevaMeta, valorObjetivo);
+                    _controller.addMetaCuantificable(nuevaMeta, valorObjetivo);
                   } else {
-                    _addMetaBooleana(nuevaMeta);
+                    _controller.addMetaBooleana(nuevaMeta);
                   }
                 }
                 Navigator.of(context).pop();
@@ -99,25 +81,6 @@ class _MetasPageState extends State<MetasPage> {
         );
       },
     );
-  }
-
-  // Función para agregar una meta booleana
-  void _addMetaBooleana(String nombreMeta) {
-    setState(() {
-      MetaBooleana nuevaMetaBooleana = MetaBooleana(nombreMeta, false);
-      _metas.add(nuevaMetaBooleana);
-      _completadas.add(false); // Agregamos un valor inicial para el checkbox
-    });
-  }
-
-  // Función para agregar una meta cuantificable
-  void _addMetaCuantificable(String nombreMeta, double valorObjetivo) {
-    setState(() {
-      MetaCuantificable nuevaMetaCuantificable =
-          MetaCuantificable(nombreMeta, 0.0, valorObjetivo);
-      _metas.add(nuevaMetaCuantificable);
-      _completadas.add(false); // Agregamos un valor inicial para el checkbox
-    });
   }
 
   @override
@@ -148,33 +111,33 @@ class _MetasPageState extends State<MetasPage> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: _metas.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.purple[50],
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.deepPurple[100],
-                        child: const Text(
-                          'A',
-                          style: TextStyle(color: Colors.deepPurple),
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: _controller.metas.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      color: Colors.purple[50],
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.deepPurple[100],
+                          child: const Text(
+                            'A',
+                            style: TextStyle(color: Colors.deepPurple),
+                          ),
                         ),
+                        title: Text(_controller.metas[index].nombre),
+                        trailing: Obx(() => Checkbox(
+                              value: _controller.selected[index],
+                              onChanged: (bool? value) {
+                                _controller.updateCompletion(
+                                    index, value ?? false);
+                              },
+                              activeColor: Colors.deepPurple,
+                            )),
                       ),
-                      // Aquí accedemos al nombre de la meta
-                      title: Text(_metas[index].nombre),
-                      trailing: Checkbox(
-                        value: _completadas[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _completadas[index] = value ?? false;
-                          });
-                        },
-                        activeColor: Colors.deepPurple,
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -182,16 +145,25 @@ class _MetasPageState extends State<MetasPage> {
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: _mostrarDialogoAgregarMeta,
+        children: [FloatingActionButton(
+            onPressed: () => _mostrarDialogoAgregarMeta(context),
             backgroundColor: Colors.deepPurple,
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
-              Get.to(Home());
+              // Filter only the completed goals (selected goals)
+              final selectedGoals = _controller.metas
+                  .asMap()
+                  .entries
+                  .where((entry) => _controller
+                      .selected[entry.key]) // Filter based on 'completadas'
+                  .map((entry) => entry.value) // Extract the meta (goal)
+                  .toList();
+
+              // Navigate to Home with the selected goals
+              Get.to(Home(), arguments: selectedGoals);
             },
             backgroundColor: Colors.deepPurple,
             child: const Icon(Icons.check),

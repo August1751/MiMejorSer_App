@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../HomePage/home.dart';
+import 'registrarse.dart';
+import '../../Controllers/login_controller.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key, required this.email, required this.password})
-      : super(key: key);
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({Key? key, required this.email, required this.password}) : super(key: key);
 
   final String email;
   final String password;
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  @override
   Widget build(BuildContext context) {
+    // Initialize the controller
+    final LoginController _controller = Get.put(LoginController());
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -29,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
           child: Form(
-            key: _formKey,
+            key: _controller.formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,34 +37,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextFormField(
                   key: const Key('TextFormFieldLoginEmail'),
-                  controller: _emailController,
+                  controller: _controller.emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter email";
-                    } else if (!value.contains('@')) {
-                      return "Enter valid email address";
-                    }
-                    return null;
-                  },
+                  validator: _controller.validateEmail,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
                   key: const Key('TextFormFieldLoginPassword'),
-                  controller: _passwordController,
+                  controller: _controller.passwordController,
                   decoration: const InputDecoration(labelText: "Password"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter password";
-                    } else if (value.length < 6) {
-                      return "Password should have at least 6 characters";
-                    }
-                    return null;
-                  },
+                  validator: _controller.validatePassword,
                 ),
                 const SizedBox(
                   height: 20,
@@ -77,26 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                     key: const Key('ButtonLoginSubmit'),
                     onPressed: () {
-                      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
+                      // Dismiss keyboard
                       FocusScope.of(context).requestFocus(FocusNode());
-                      final form = _formKey.currentState;
-                      form!.save();
-                      if (form.validate()) {
-                        if (widget.email == _emailController.text &&
-                            widget.password == _passwordController.text) {
-                              Get.to(Home());
-                        } else {
-                          const snackBar = SnackBar(
-                            content: Text('User or passwor nok'),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        }
-                      } else {
-                        const snackBar = SnackBar(
-                          content: Text('Validation nok'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
+                      _controller.login(email, password);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple, // Color del botón
@@ -113,6 +77,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text("Submit")),
                 const SizedBox(
                   height: 20,
+                ),
+                const SizedBox(height: 20), // Espacio entre los botones
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(const SignUpPage());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple, // Color del botón
+                    foregroundColor: Colors.white, // Color del texto del botón
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 50.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                  child: const Text('Registrarse'),
                 ),
               ],
             ),

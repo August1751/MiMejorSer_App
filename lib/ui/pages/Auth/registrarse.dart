@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'metas_primera_vez.dart';
+import '../../Controllers/register_controller.dart';
 
-class SignUpPage extends StatefulWidget {
+class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  @override
   Widget build(BuildContext context) {
+    // Initialize the controller
+    final SignUpController _controller = Get.put(SignUpController());
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -26,7 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
           child: Form(
-            key: _formKey,
+            key: _controller.formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -34,81 +28,43 @@ class _SignUpPageState extends State<SignUpPage> {
                   'Enter account information',
                   style: TextStyle(fontSize: 20),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                     key: const Key('TextFormFieldSignUpUsername'),
-                    controller: _usernameController,
+                    controller: _controller.usernameController,
                     decoration: const InputDecoration(
                         border: UnderlineInputBorder(), labelText: 'Username'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Enter username";
-                      } else if (value.length < 8) {
-                        return "Username must have at least 8 characters";
-                      }
-                      return null;
-                    }),
-                const SizedBox(
-                  height: 20,
+                    validator: _controller.validateUsername,
                 ),
+                const SizedBox(height: 20),
                 TextFormField(
                   key: const Key('TextFormFieldSignUpEmail'),
-                  controller: _emailController,
+                  controller: _controller.emailController,
                   decoration: const InputDecoration(
                       border: UnderlineInputBorder(), labelText: 'Email'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter email";
-                    } else if (!value.contains('@')) {
-                      return "Enter valid email address";
-                    }
-                    return null;
-                  },
+                  validator: _controller.validateEmail,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   key: const Key('TextFormFieldSignUpPassword'),
-                  controller: _passwordController,
+                  controller: _controller.passwordController,
                   decoration: const InputDecoration(
                       border: UnderlineInputBorder(), labelText: "Password"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter password";
-                    } else if (value.length < 6) {
-                      return "Password should have at least 6 characters";
-                    }
-                    return null;
-                  },
+                  validator: _controller.validatePassword,
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                     key: const Key('ButtonSignUpSubmit'),
                     onPressed: () {
-                      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
+                      // Dismiss the keyboard
                       FocusScope.of(context).requestFocus(FocusNode());
-                      final form = _formKey.currentState;
-                      form!.save();
-                      if (form.validate()) {
-                       Get.to(const MetasPage());  //Get.OffAll(firstime)
-                      } else {
-                        const snackBar = SnackBar(
-                          content: Text('Validation nok'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      }
+                      _controller.signUp(); // Use the controller's signup method
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple, // Color del botón
-                      foregroundColor:
-                          Colors.white, // Color del texto del botón
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 50.0,
@@ -117,7 +73,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: const Text("Submit")),
+                    child: const Text("Submit")
+                ),
               ],
             ),
           ),

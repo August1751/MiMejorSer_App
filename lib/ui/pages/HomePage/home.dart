@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../Controllers/metas_controller.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Retrieve the goals from Get.arguments, if passed
+    final List<dynamic>? selectedGoals = Get.arguments;
+    final MetasController _controller = Get.put(MetasController());
+
     return MaterialApp(
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Espacio superior
-              SizedBox(height: 20),
+              SizedBox(height: 20), // Espacio superior
 
               // Usamos un Expanded para hacer que el grid ocupe el espacio restante
               Expanded(
@@ -51,9 +56,13 @@ class Home extends StatelessWidget {
                     SizedBox.shrink(),
 
                     // Ítems del grid
-                    ...List.generate(6, (index) {
-                      return CustomGridItem(); // Ítems interactivos
-                    }),
+                    if (selectedGoals != null)
+                      ...selectedGoals.map((meta) {
+                        print(meta);
+                        return GoalGridItem(meta: meta); // Display each goal
+                      }).toList(),
+
+                    // You can keep other grid items here if needed
                   ],
                 ),
               ),
@@ -72,45 +81,38 @@ class Home extends StatelessWidget {
   }
 }
 
-class CustomGridItem extends StatefulWidget {
-  @override
-  _CustomGridItemState createState() => _CustomGridItemState();
-}
+// Custom widget to display each goal in the grid
+class GoalGridItem extends StatelessWidget {
+  final dynamic meta;
 
-class _CustomGridItemState extends State<CustomGridItem> {
-  bool isPressed = false;
-
-  void _handleTap() {
-    setState(() {
-      isPressed = !isPressed; // Cambia el estado al presionar
-    });
-  }
+  GoalGridItem({required this.meta});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _handleTap, // Detecta cuando el widget es presionado
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[300], // Fondo gris claro
-          borderRadius: BorderRadius.circular(8), // Bordes redondeados
-        ),
-        child: Center(
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.purple, width: 2), // Borde morado
-            ),
-            child: Center(
-              child: Container(
-                width: 20,
-                height: 20,
-                color: isPressed ? Colors.green : Colors.purple, // Cambia de color cuando se presiona
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[300], // Fondo gris claro
+        borderRadius: BorderRadius.circular(8), // Bordes redondeados
+      ),
+      padding: EdgeInsets.all(16),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              meta.nombre, // Display goal name
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
               ),
             ),
-          ),
+            if (meta is MetaCuantificable)
+              Text(
+                'Meta: ${meta.valorObjetivo}', // Display goal target if cuantificable
+                style: TextStyle(fontSize: 16),
+              ),
+          ],
         ),
       ),
     );

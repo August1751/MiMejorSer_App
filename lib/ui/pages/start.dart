@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'ui/pages/Auth/iniciar_sesion.dart';
-import 'ui/pages/Auth/registrarse.dart';
+import 'Auth/iniciar_sesion.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -38,25 +37,7 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: const Text('Iniciar sesión'),
-              ),
-              const SizedBox(height: 20), // Espacio entre los botones
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(const SignUpPage() );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple, // Color del botón
-                  foregroundColor: Colors.white, // Color del texto del botón
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 50.0,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                child: const Text('Registrarse'),
+                child: const Text('Iniciar'),
               ),
               const Spacer(flex: 2), // Este Spacer crea espacio al final de la pantalla
             ],
