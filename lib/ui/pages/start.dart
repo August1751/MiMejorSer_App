@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'iniciar_sesion.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class Start extends StatelessWidget {
+   Start({super.key});
 
   @override
   Widget build(BuildContext context) {

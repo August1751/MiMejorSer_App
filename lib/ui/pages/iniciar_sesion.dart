@@ -77,15 +77,14 @@ class LoginScreen extends StatelessWidget {
                     child: const Text("Submit")),
                 const SizedBox(
                   height: 20,
-                ),
-                const SizedBox(height: 20), // Espacio entre los botones
+                ), // Espacio entre los botones
                 ElevatedButton(
                   onPressed: () {
                     Get.to(const SignUpPage());
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple, // Color del botón
-                    foregroundColor: Colors.white, // Color del texto del botón
+                    backgroundColor: Colors.white, // Color del botón
+                    foregroundColor: Colors.deepPurple,// Color del texto del botón
                     padding: const EdgeInsets.symmetric(
                       vertical: 16.0,
                       horizontal: 50.0,

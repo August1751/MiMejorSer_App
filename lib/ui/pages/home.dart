@@ -103,7 +103,7 @@ class GoalGridItem extends StatelessWidget {
             if (meta is MetaCuantificable)
               Text(
                 'Meta: ${meta.valorObjetivo}', // Display goal target if cuantificable
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 14),
               ),
           ],
         ),
