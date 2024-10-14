@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import './validators.dart';
+import './user_controller.dart';
 import '../pages/home.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   var email = ''.obs;
   var password = ''.obs;
 
-  // Function to validate and login
-  void login(String correctEmail, String correctPassword) {
+  // Inyecta el UserController para acceder a los usuarios
+  final UserController userController = Get.find<UserController>();
+
+  // Función para validar e iniciar sesión
+  void login() {
     final form = formKey.currentState;
     if (form != null && form.validate()) {
-      if (emailController.text == correctEmail && passwordController.text == correctPassword) {
-        Get.to(Home());  // Navigate to Home on success
+      // Verifica si existe el usuario con las credenciales correctas
+      var user = userController.findUserByEmail(emailController.text);
+      if (user != null && user.password == passwordController.text) {
+        Get.to(Home());  // Navega a Home si el login es exitoso
       } else {
-        Get.snackbar('Error', 'Incorrect email or password',
+        Get.snackbar('Error', 'Email o contraseña incorrectos',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     } else {
-      Get.snackbar('Error', 'Please enter valid details',
+      Get.snackbar('Error', 'Por favor, ingrese los datos válidos',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -32,22 +39,12 @@ class LoginController extends GetxController {
     }
   }
 
-  // Form validator functions
+  // Validadores del formulario
   String? validateEmail(String? value) {
-    if (value!.isEmpty) {
-      return "Enter email";
-    } else if (!value.contains('@')) {
-      return "Enter valid email address";
-    }
-    return null;
+    return FormValidators.validateEmail(value);
   }
 
   String? validatePassword(String? value) {
-    if (value!.isEmpty) {
-      return "Enter password";
-    } else if (value.length < 6) {
-      return "Password should have at least 6 characters";
-    }
-    return null;
+    return FormValidators.validatePassword(value);
   }
 }

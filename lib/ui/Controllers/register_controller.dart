@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import './user_controller.dart';
+import './validators.dart';
 import '../pages/metas_primera_vez.dart';
 
 class SignUpController extends GetxController {
@@ -8,14 +10,23 @@ class SignUpController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Function to validate and sign up
+  // Inyecta el UserController para registrar nuevos usuarios
+  final UserController userController = Get.find<UserController>();
+
+  // Función para validar y registrarse
   void signUp() {
     final form = formKey.currentState;
     if (form != null && form.validate()) {
-      // Navigate to MetasPage after successful validation
+      // Añade el nuevo usuario al UserController
+      userController.addUser(
+        usernameController.text,
+        emailController.text,
+        passwordController.text,
+      );
+      // Navega a la página de Metas tras el registro exitoso
       Get.to(MetasPage());
     } else {
-      Get.snackbar('Error', 'Please correct the errors',
+      Get.snackbar('Error', 'Por favor, corrija los errores',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -23,31 +34,16 @@ class SignUpController extends GetxController {
     }
   }
 
-  // Validators for the form fields
+  // Validadores del formulario
   String? validateUsername(String? value) {
-    if (value!.isEmpty) {
-      return "Enter username";
-    } else if (value.length < 8) {
-      return "Username must have at least 8 characters";
-    }
-    return null;
+    return FormValidators.validateUsername(value);
   }
 
   String? validateEmail(String? value) {
-    if (value!.isEmpty) {
-      return "Enter email";
-    } else if (!value.contains('@')) {
-      return "Enter valid email address";
-    }
-    return null;
+    return FormValidators.validateEmail(value);
   }
 
   String? validatePassword(String? value) {
-    if (value!.isEmpty) {
-      return "Enter password";
-    } else if (value.length < 6) {
-      return "Password should have at least 6 characters";
-    }
-    return null;
+    return FormValidators.validatePassword(value);
   }
 }
