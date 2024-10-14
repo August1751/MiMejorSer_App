@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       // Dismiss keyboard
                       FocusScope.of(context).requestFocus(FocusNode());
-                      _controller.login(email, password);
+                      _controller.login();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple, // Color del botón
