@@ -24,7 +24,7 @@ class MetaBooleana extends Meta {
 // Class representing a quantifiable goal (inherits from Meta)
 class MetaCuantificable extends Meta {
   double valorActual = 0; // Current value of the quantifiable goal
-  double valorObjetivo;   // Target value to achieve
+  double valorObjetivo; // Target value to achieve
 
   MetaCuantificable(String nombre, this.valorObjetivo, [this.valorActual = 0])
       : super(nombre, valorActual >= valorObjetivo);
@@ -48,34 +48,50 @@ class MetasController extends GetxController {
   // Observable list of metas
   var metas = <Meta>[].obs;
 
-  void addMeta(Meta meta){
+  // Constructor para recibir una lista dinámica
+  MetasController({List<dynamic>? initialMetas}) {
+    if (initialMetas != null) {
+      for (var meta in initialMetas) {
+        if (meta is MetaBooleana) {
+          metas.add(meta); // Añadir meta booleana si es del tipo correcto
+        } else if (meta is MetaCuantificable) {
+          metas.add(meta); // Añadir meta cuantificable si es del tipo correcto
+        }
+        // Si se espera otro tipo de meta en el futuro, se puede añadir aquí
+      }
+    }
+  }
+
+  void addMeta(Meta meta) {
     metas.add(meta);
   }
 
-  // Method to add a boolean goal
+  // Método para añadir una meta booleana
   void addMetaBooleana(String nombre) {
     metas.add(MetaBooleana(nombre));
   }
 
-  // Method to add a quantifiable goal
+  // Método para añadir una meta cuantificable
   void addMetaCuantificable(String nombre, double valorObjetivo) {
     metas.add(MetaCuantificable(nombre, valorObjetivo));
   }
 
-  // Method to update the completion status of a goal
+  // Método para actualizar el estado de una meta
   void updateCompletion(int index, bool isCompleted) {
     metas[index].completa = isCompleted;
-    metas.refresh(); // Refresh the list to trigger UI updates
+    metas.refresh(); // Refresca la lista para actualizar la UI
   }
 
-  // Method to update progress of a quantifiable goal
+  // Método para actualizar el progreso de una meta cuantificable
   void actualizarProgresoMetaCuantificable(int index, double valor) {
     if (metas[index] is MetaCuantificable) {
       (metas[index] as MetaCuantificable).actualizarProgreso(valor);
-      metas.refresh(); // Refresh the list to trigger UI updates
+      metas.refresh(); // Refresca la lista para actualizar la UI
     }
   }
 }
+
+
 
 class MetasPageController extends GetxController {
   // Observable lists for metas and selected
@@ -93,11 +109,17 @@ class MetasPageController extends GetxController {
     metas.addAll([
       MetaBooleana('Hidratarse'),
       MetaBooleana('Dormir siesta'),
-      MetaCuantificable('Comer frutas',3),
+      MetaCuantificable('Comer frutas', 3),
       MetaBooleana('Hacer ejercicio'),
       MetaBooleana('Leer un libro')
     ]);
-    selected.addAll([false, false, false,false,false]);  // Initially, all metas are not completed
+    selected.addAll([
+      false,
+      false,
+      false,
+      false,
+      false
+    ]); // Initially, all metas are not completed
   }
 
   // Function to add a new meta
@@ -107,7 +129,7 @@ class MetasPageController extends GetxController {
   }
 
   void addMetaCuantificable(String nombre, double valorObjetivo) {
-    metas.add(MetaCuantificable(nombre,valorObjetivo));
+    metas.add(MetaCuantificable(nombre, valorObjetivo));
     selected.add(false); // Initially not completed
   }
 
