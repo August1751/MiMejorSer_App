@@ -14,7 +14,13 @@ class SignUpPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Registrarse"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerRight,
+                end: Alignment.centerLeft,
+                colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)])),
+        ),
       ),
       body: Center(
         child: Padding(
@@ -25,7 +31,7 @@ class SignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Enter account information',
+                  'Ingresa la información de la cuenta',
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 20),
@@ -33,7 +39,7 @@ class SignUpPage extends StatelessWidget {
                     key: const Key('TextFormFieldSignUpUsername'),
                     controller: _controller.usernameController,
                     decoration: const InputDecoration(
-                        border: UnderlineInputBorder(), labelText: 'Username'),
+                        border: UnderlineInputBorder(), labelText: 'Usuario'),
                     validator: _controller.validateUsername,
                 ),
                 const SizedBox(height: 20),
@@ -41,7 +47,7 @@ class SignUpPage extends StatelessWidget {
                   key: const Key('TextFormFieldSignUpEmail'),
                   controller: _controller.emailController,
                   decoration: const InputDecoration(
-                      border: UnderlineInputBorder(), labelText: 'Email'),
+                      border: UnderlineInputBorder(), labelText: 'Correo electronico'),
                   validator: _controller.validateEmail,
                 ),
                 const SizedBox(height: 20),
@@ -49,7 +55,7 @@ class SignUpPage extends StatelessWidget {
                   key: const Key('TextFormFieldSignUpPassword'),
                   controller: _controller.passwordController,
                   decoration: const InputDecoration(
-                      border: UnderlineInputBorder(), labelText: "Password"),
+                      border: UnderlineInputBorder(), labelText: "Contraseña"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   validator: _controller.validatePassword,
@@ -73,7 +79,7 @@ class SignUpPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: const Text("Submit")
+                    child: const Text("Entrar")
                 ),
               ],
             ),

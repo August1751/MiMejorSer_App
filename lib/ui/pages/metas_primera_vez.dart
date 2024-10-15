@@ -88,7 +88,11 @@ class MetasPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Metas'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)])),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

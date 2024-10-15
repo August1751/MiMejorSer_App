@@ -1,27 +1,27 @@
 class FormValidators {
   static String? validateEmail(String? value) {
     if (value!.isEmpty) {
-      return "Enter email";
+      return "Ingrese un correo electronico";
     } else if (!value.contains('@')) {
-      return "Enter valid email address";
+      return "Ingrese un correo valido";
     }
     return null;
   }
 
   static String? validatePassword(String? value) {
     if (value!.isEmpty) {
-      return "Enter password";
+      return "Ingrese una contraseña";
     } else if (value.length < 6) {
-      return "Password should have at least 6 characters";
+      return "La contraseña debe tener minimo 6 caracteres";
     }
     return null;
   }
 
   static String? validateUsername(String? value) {
     if (value!.isEmpty) {
-      return "Enter username";
+      return "Ingrese usuario";
     } else if (value.length < 8) {
-      return "Username must have at least 8 characters";
+      return "El usuario debe tener minimo 8 caracteres";
     }
     return null;
   }

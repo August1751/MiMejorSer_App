@@ -4,7 +4,8 @@ import 'registrarse.dart';
 import '../Controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key, required this.email, required this.password}) : super(key: key);
+  const LoginScreen({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   final String email;
   final String password;
@@ -13,12 +14,15 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initialize the controller
     final LoginController _controller = Get.put(LoginController());
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Iniciar Sesión"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)])),
+        ),
       ),
       body: Center(
         child: Padding(
@@ -29,7 +33,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Login with email",
+                  "Iniciar sesión con correo",
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(
@@ -38,7 +42,8 @@ class LoginScreen extends StatelessWidget {
                 TextFormField(
                   key: const Key('TextFormFieldLoginEmail'),
                   controller: _controller.emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration:
+                      const InputDecoration(labelText: 'Correo Electronico'),
                   validator: _controller.validateEmail,
                 ),
                 const SizedBox(
@@ -47,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                 TextFormField(
                   key: const Key('TextFormFieldLoginPassword'),
                   controller: _controller.passwordController,
-                  decoration: const InputDecoration(labelText: "Password"),
+                  decoration: const InputDecoration(labelText: "Contraseña"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
                   validator: _controller.validatePassword,
@@ -74,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: const Text("Submit")),
+                    child: const Text("Entrar")),
                 const SizedBox(
                   height: 20,
                 ), // Espacio entre los botones
@@ -83,16 +88,17 @@ class LoginScreen extends StatelessWidget {
                     Get.to(const SignUpPage());
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Color del botón
-                    foregroundColor: Colors.deepPurple,// Color del texto del botón
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16.0,
-                      horizontal: 50.0,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
+                      backgroundColor: Colors.white, // Color del botón
+                      foregroundColor:
+                          Colors.deepPurple, // Color del texto del botón
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 35.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      side: BorderSide(color: Colors.deepPurple)),
                   child: const Text('Registrarse'),
                 ),
               ],
