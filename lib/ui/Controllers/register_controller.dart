@@ -19,7 +19,7 @@ class SignUpController extends GetxController {
     final form = formKey.currentState;
     if (form != null && form.validate()) {
       // Añade el nuevo usuario al UserController
-      userController.addUser(
+      bool validate= userController.addUser(
         usernameController.text,
         emailController.text,
         passwordController.text,
@@ -29,7 +29,10 @@ class SignUpController extends GetxController {
       String encodedEmail = _encodeEmail(emailController.text);
 
       // Navega a la página de Metas tras el registro exitoso, pasando el email codificado
-      Get.to(() => MetasPage(), arguments: {'email': encodedEmail});
+      if(validate){
+        Get.to(() => MetasPage(), arguments: {'email': encodedEmail});
+      }
+      
     } else {
       Get.snackbar('Error', 'Por favor, corrija los errores',
         snackPosition: SnackPosition.BOTTOM,

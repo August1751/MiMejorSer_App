@@ -3,9 +3,13 @@ import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart';
 import 'home.dart';
+class MetasPage extends StatefulWidget{
+   @override
+  const MetasPage({Key? key}) : super(key: key);
+  _MetasPage createState() => _MetasPage();
+}
 
-class MetasPage extends StatelessWidget {
-  MetasPage({Key? key}) : super(key: key);
+class _MetasPage extends State<MetasPage> {
 
   final MetasPageController _controller = Get.put(MetasPageController());
   final UserController _userController = Get.find<UserController>();

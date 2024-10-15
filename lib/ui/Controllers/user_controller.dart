@@ -39,26 +39,28 @@ class UserController extends GetxController {
   final MetasController metasController = MetasController();
 
   // Método para agregar un nuevo usuario
-  void addUser(String username, String email, String password) {
+  bool addUser(String username, String email, String password) {
     // Verifica si el email ya existe para evitar duplicados
     if (users.any((user) => user.email == email)) {
       Get.snackbar('Error', 'El usuario ya existe con ese email',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
+      return false;
     } else {
       users.add(User(username, email, password));
       Get.snackbar('Éxito', 'Usuario agregado correctamente',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white);
+      return true;
     }
   }
 
   String encodeEmail(String email) {
     return base64Url.encode(utf8.encode(email));
   }
-  
+
   // Método para eliminar un usuario por email
   void removeUserByEmail(String email) {
     users.removeWhere((user) => user.email == email);

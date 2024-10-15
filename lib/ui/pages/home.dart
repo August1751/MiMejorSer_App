@@ -7,10 +7,11 @@ import '../pages/puntos_page.dart'; // Importar la nueva página de puntos
 
 class Home extends StatefulWidget {
   @override
+  const Home({Key? key}) : super(key: key);
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home>{
   DateTime currentDate = DateTime.now(); // Fecha actual
 
   @override
@@ -55,7 +56,7 @@ class _HomeState extends State<Home> {
     IconButton(
       icon: Icon(Icons.star), // Ícono para ir a la página de puntos
       onPressed: () {
-        Get.to(PuntosPage()); // Navegar a la página de puntos
+        Get.to(PuntosPage(),arguments: {'email': encodedEmail}); // Navegar a la página de puntos
       },
     ),
   ],

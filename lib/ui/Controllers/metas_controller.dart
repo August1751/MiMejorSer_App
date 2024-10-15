@@ -64,7 +64,7 @@ class MetaCuantificable extends Meta {
 
 class MetasController extends GetxController {
   var metas = <Meta>[].obs;
-  var puntos = 0.obs; // Variable que almacenará los puntos
+  var puntos = int.obs; // Variable que almacenará los puntos
 
   MetasController({List<dynamic>? initialMetas}) {
     if (initialMetas != null) {

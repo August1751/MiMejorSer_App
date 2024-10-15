@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mimejorser_app/ui/Controllers/user_controller.dart';
 import '../Controllers/metas_controller.dart';
 
 class PuntosPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    final MetasController metasController = Get.find<MetasController>();
-
+    final arguments = Get.arguments;
+    final encodedEmail = arguments['email'];
+    final UserController userController = Get.find<UserController>();
+    final user = userController.users.firstWhereOrNull(
+        (u) => userController.encodeEmail(u.email) == encodedEmail);
+    final MetasController controller = Get.put(
+      MetasController(initialMetas: user?.metas ?? []),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis Puntos'),
@@ -23,7 +31,7 @@ class PuntosPage extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Text(
-                '${metasController.puntos.value}', // Mostramos los puntos actuales
+                '${controller.puntos.value}', // Mostramos los puntos actuales
                 style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.purple),
               ),
             ],

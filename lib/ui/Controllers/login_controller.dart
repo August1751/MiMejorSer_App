@@ -24,7 +24,7 @@ class LoginController extends GetxController {
       var user = userController.findUserByEmail(emailController.text);
       if (user != null && user.password == passwordController.text) {
         String encodedEmail = _encodeEmail(emailController.text);
-        Get.to(Home(),arguments: {'email': encodedEmail}); // Navega a Home si el login es exitoso
+        Get.to(const Home(),arguments: {'email': encodedEmail}); // Navega a Home si el login es exitoso
       } else {
         Get.snackbar(
           'Error',
