@@ -15,7 +15,6 @@ class MetasPage extends StatelessWidget {
     // Obtener el email codificado de los argumentos
     final arguments = Get.arguments;
     final String encodedEmail = arguments['email'];
-    print('metas page {$encodedEmail}');
 
     Future<void> _mostrarDialogoAgregarMeta(BuildContext context) async {
       String nuevaMeta = '';

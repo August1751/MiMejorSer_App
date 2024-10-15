@@ -9,14 +9,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final arguments = Get.arguments ?? 'picha'; 
     final encodedEmail = arguments['email'];
-    print('home{$encodedEmail}');
     final UserController userController = Get.find<UserController>();
-    print(userController);
     // Buscar al usuario con el encodedEmail
     final user = userController.users
         .firstWhereOrNull((u) => userController.encodeEmail(u.email) == encodedEmail);
-
-    print(user);
     // Inicializar el controlador de metas con las metas del usuario, si existen
     final controller = Get.put(
       MetasController(initialMetas: user?.metas ?? []),

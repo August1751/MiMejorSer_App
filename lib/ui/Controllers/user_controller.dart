@@ -55,7 +55,6 @@ class UserController extends GetxController {
   }
 
   String encodeEmail(String email) {
-    print('email: desde metas{$email}');
     return base64Url.encode(utf8.encode(email));
   }
 
