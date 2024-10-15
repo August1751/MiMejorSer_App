@@ -9,6 +9,7 @@ abstract class Meta {
 
   // Abstract method to complete the goal
   void completar();
+  void descompletar();
 }
 
 // Class representing a boolean goal (inherits from Meta)
@@ -35,7 +36,6 @@ class MetaBooleana extends Meta {
   }
 }
 
-
 // Class representing a quantifiable goal (inherits from Meta)
 class MetaCuantificable extends Meta {
   double valorActual = 0; // Current value of the quantifiable goal
@@ -56,23 +56,24 @@ class MetaCuantificable extends Meta {
   void completar() {
     completa = true;
   }
+
+  void descompletar() {
+    valorActual = 0;
+  }
 }
 
-// MetasController to manage a list of metas (goals)
 class MetasController extends GetxController {
-  // Observable list of metas
   var metas = <Meta>[].obs;
+  var puntos = 0.obs; // Variable que almacenará los puntos
 
-  // Constructor para recibir una lista dinámica
   MetasController({List<dynamic>? initialMetas}) {
     if (initialMetas != null) {
       for (var meta in initialMetas) {
         if (meta is MetaBooleana) {
-          metas.add(meta); // Añadir meta booleana si es del tipo correcto
+          metas.add(meta);
         } else if (meta is MetaCuantificable) {
-          metas.add(meta); // Añadir meta cuantificable si es del tipo correcto
+          metas.add(meta);
         }
-        // Si se espera otro tipo de meta en el futuro, se puede añadir aquí
       }
     }
   }
@@ -81,44 +82,48 @@ class MetasController extends GetxController {
     metas.add(meta);
   }
 
-  // Método para añadir una meta booleana
   void addMetaBooleana(String nombre) {
     metas.add(MetaBooleana(nombre));
   }
 
-  // Método para añadir una meta cuantificable
   void addMetaCuantificable(String nombre, double valorObjetivo) {
     metas.add(MetaCuantificable(nombre, valorObjetivo));
   }
 
-  // Método para actualizar el estado de una meta
   void updateCompletion(int index, bool isCompleted) {
-    metas[index].completa = isCompleted;
-    metas.refresh(); // Refresca la lista para actualizar la UI
+    if (isCompleted && !metas[index].completa) {
+      metas[index].completar();
+      puntos += 5; // Añadir 5 puntos cuando se completa la meta
+    } 
+    metas.refresh(); // Refrescar la lista
   }
 
-  // Método para actualizar el progreso de una meta cuantificable
   void actualizarProgresoMetaCuantificable(int index, double valor) {
     if (metas[index] is MetaCuantificable) {
       (metas[index] as MetaCuantificable).actualizarProgreso(valor);
-      metas.refresh(); // Refresca la lista para actualizar la UI
+      if (metas[index].completa) {
+        puntos += 5; // Añadir puntos cuando se completa la meta
+      }
+      metas.refresh();
     }
   }
 
   void reiniciarMetasDiarias() {
     for (var meta in metas) {
       if (meta is MetaCuantificable) {
-        meta.valorActual = 0; // Reinicia el valor actual
+        meta.valorActual = 0;
       } else if (meta is MetaBooleana) {
+        if (meta.completa) {
+          puntos -=
+              5; // Restar los puntos si la meta estaba completa y se reinicia
+        }
         meta.completa = false;
-        meta.valorActual = 0; // Reinicia las metas booleanas
+        meta.valorActual = 0;
       }
     }
-    update(); // Notifica que las metas han sido actualizadas
+    update();
   }
 }
-
-
 
 class MetasPageController extends GetxController {
   // Observable lists for metas and selected
