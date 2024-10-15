@@ -12,8 +12,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home>{
-  DateTime currentDate = DateTime.now(); // Fecha actual
+  late DateTime currentDate; // Fecha actual
 
+   @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments;
+    final encodedEmail = arguments['email'];
+    final UserController userController = Get.find<UserController>();
+    final user = userController.users.firstWhereOrNull(
+        (u) => userController.encodeEmail(u.email) == encodedEmail);
+    currentDate = user?.dateTime ?? DateTime.now();
+  }
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -48,6 +58,7 @@ class _HomeState extends State<Home>{
       onPressed: () {
         setState(() {
           currentDate = currentDate.add(Duration(days: 1));
+          userController.setUserDateTime(encodedEmail, currentDate);
           controller.reiniciarMetasDiarias();
           userController.addMetasToUser(encodedEmail, controller.metas);
         });

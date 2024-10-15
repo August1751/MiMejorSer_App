@@ -114,9 +114,11 @@ class UserController extends GetxController {
           colorText: Colors.white);
     }
   }
+
   // Método para cambiar la fecha de un usuario
-  void setUserDateTime(String email, DateTime dateTime) {
-    var user = findUserByEmail(email);
+  void setUserDateTime(String encodedEmail, DateTime dateTime) {
+    var user =
+        users.firstWhereOrNull((u) => encodeEmail(u.email) == encodedEmail);
     if (user != null) {
       user.dateTime = dateTime; // Cambiar la fecha
       Get.snackbar('Éxito', 'Fecha actualizada para ${user.username}',
