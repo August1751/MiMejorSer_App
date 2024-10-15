@@ -1,97 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
+import '../Controllers/user_controller.dart';
 import 'home.dart';
 
 class MetasPage extends StatelessWidget {
   MetasPage({Key? key}) : super(key: key);
 
   final MetasPageController _controller = Get.put(MetasPageController());
-
-  Future<void> _mostrarDialogoAgregarMeta(BuildContext context) async {
-    String nuevaMeta = '';
-    bool esCuantificable = false;
-    double valorObjetivo = 0.0;
-
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Nueva Meta'),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setDialogState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    onChanged: (value) {
-                      nuevaMeta = value;
-                    },
-                    decoration:
-                        const InputDecoration(hintText: 'Escribe una meta'),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      const Text('¿Es cuantificable?'),
-                      Checkbox(
-                        value: esCuantificable,
-                        onChanged: (bool? value) {
-                          setDialogState(() {
-                            esCuantificable = value ?? false;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  if (esCuantificable)
-                    TextField(
-                      onChanged: (value) {
-                        valorObjetivo = double.tryParse(value) ?? 0.0;
-                      },
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(hintText: 'Valor objetivo'),
-                    ),
-                ],
-              );
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Agregar'),
-              onPressed: () {
-                if (nuevaMeta.isNotEmpty) {
-                  if (esCuantificable) {
-                    _controller.addMetaCuantificable(nuevaMeta, valorObjetivo);
-                  } else {
-                    _controller.addMetaBooleana(nuevaMeta);
-                  }
-                }
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final UserController _userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
+    // Obtener el email codificado de los argumentos
+    final arguments = Get.arguments;
+    final String encodedEmail = arguments['email'];
+    print('metas page {$encodedEmail}');
+
+    Future<void> _mostrarDialogoAgregarMeta(BuildContext context) async {
+      String nuevaMeta = '';
+      bool esCuantificable = false;
+      double valorObjetivo = 0.0;
+
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Nueva Meta'),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setDialogState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      onChanged: (value) {
+                        nuevaMeta = value;
+                      },
+                      decoration: const InputDecoration(hintText: 'Escribe una meta'),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        const Text('¿Es cuantificable?'),
+                        Checkbox(
+                          value: esCuantificable,
+                          onChanged: (bool? value) {
+                            setDialogState(() {
+                              esCuantificable = value ?? false;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    if (esCuantificable)
+                      TextField(
+                        onChanged: (value) {
+                          valorObjetivo = double.tryParse(value) ?? 0.0;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(hintText: 'Valor objetivo'),
+                      ),
+                  ],
+                );
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Agregar'),
+                onPressed: () {
+                  if (nuevaMeta.isNotEmpty) {
+                    if (esCuantificable) {
+                      _controller.addMetaCuantificable(nuevaMeta, valorObjetivo);
+                    } else {
+                      _controller.addMetaBooleana(nuevaMeta);
+                    }
+                  }
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Metas'),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)])),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)]),
+          ),
         ),
       ),
       body: Padding(
@@ -101,17 +106,12 @@ class MetasPage extends StatelessWidget {
           children: [
             const Text(
               'Metas:',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             const Text(
               '¿Qué metas deseas cumplir?',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+              style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -131,13 +131,12 @@ class MetasPage extends StatelessWidget {
                         ),
                         title: Text(_controller.metas[index].nombre),
                         trailing: Obx(() => Checkbox(
-                              value: _controller.selected[index],
-                              onChanged: (bool? value) {
-                                _controller.updateCompletion(
-                                    index, value ?? false);
-                              },
-                              activeColor: Colors.deepPurple,
-                            )),
+                          value: _controller.selected[index],
+                          onChanged: (bool? value) {
+                            _controller.updateCompletion(index, value ?? false);
+                          },
+                          activeColor: Colors.deepPurple,
+                        )),
                       ),
                     );
                   },
@@ -149,28 +148,31 @@ class MetasPage extends StatelessWidget {
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [FloatingActionButton(
+        children: [
+          FloatingActionButton(
             onPressed: () => _mostrarDialogoAgregarMeta(context),
             backgroundColor: Colors.deepPurple,
-            child: const Icon(Icons.add,color:Colors.white),
+            child: const Icon(Icons.add, color: Colors.white),
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
-              // Filter only the completed goals (selected goals)
+              // Filtra solo las metas completadas (seleccionadas)
               final selectedGoals = _controller.metas
                   .asMap()
                   .entries
-                  .where((entry) => _controller
-                      .selected[entry.key]) // Filter based on 'completadas'
-                  .map((entry) => entry.value) // Extract the meta (goal)
+                  .where((entry) => _controller.selected[entry.key])
+                  .map((entry) => entry.value)
                   .toList();
 
-              // Navigate to Home with the selected goals
-              Get.to(Home(), arguments: selectedGoals);
+              // Agrega las metas seleccionadas al usuario con el email codificado
+              _userController.addMetasToUser(encodedEmail, selectedGoals);
+
+              // Navega a Home con el email codificado
+              Get.to(() => Home(), arguments: {'email': encodedEmail});
             },
             backgroundColor: Colors.deepPurple,
-            child: const Icon(Icons.check,color:Colors.white),
+            child: const Icon(Icons.check, color: Colors.white),
           ),
         ],
       ),

@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
+import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
 import 'package:flutter_spinkit/flutter_spinkit.dart'; // Para añadir el círculo de carga
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<dynamic>? selectedGoals = Get.arguments;
-    final controller = Get.put(MetasController(initialMetas: selectedGoals));
+    final arguments = Get.arguments ?? 'picha'; 
+    final encodedEmail = arguments['email'];
+    print('home{$encodedEmail}');
+    final UserController userController = Get.find<UserController>();
+    print(userController);
+    // Buscar al usuario con el encodedEmail
+    final user = userController.users
+        .firstWhereOrNull((u) => userController.encodeEmail(u.email) == encodedEmail);
+
+    print(user);
+    // Inicializar el controlador de metas con las metas del usuario, si existen
+    final controller = Get.put(
+      MetasController(initialMetas: user?.metas ?? []),
+    );
 
     return MaterialApp(
       home: Scaffold(
@@ -51,7 +64,11 @@ class Home extends StatelessWidget {
                     children: List.generate(controller.metas.length, (index) {
                       final meta = controller.metas[index];
                       return GoalGridItem(
-                          meta: meta, index: index, controller: controller);
+                        meta: meta,
+                        index: index,
+                        controller: controller,
+                        encodedEmail: encodedEmail,
+                      );
                     }),
                   );
                 }),
@@ -75,19 +92,22 @@ class GoalGridItem extends StatelessWidget {
   final dynamic meta;
   final int index;
   final MetasController controller;
+  final String encodedEmail;
 
-  GoalGridItem(
-      {required this.meta, required this.index, required this.controller});
+  GoalGridItem({
+    required this.meta,
+    required this.index,
+    required this.controller,
+    required this.encodedEmail,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (meta is MetaBooleana) {
-          // Si es meta booleana, mostrar el diálogo con el checkbox
           _showBooleanMetaDialog(context, meta);
         } else if (meta is MetaCuantificable) {
-          // Si es meta cuantificable, mostrar el diálogo para añadir cantidad
           _showProgressDialog(context, meta);
         }
       },
@@ -101,7 +121,6 @@ class GoalGridItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Añadir el ícono asociado a cada meta
               Icon(
                 _getIconForMeta(meta.nombre),
                 size: 40,
@@ -117,17 +136,10 @@ class GoalGridItem extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 8),
-              // Mostrar barra de progreso tanto para MetaBooleana como MetaCuantificable
-              Column(
-                children: [
-                  SizedBox(height: 8),
-                  // Barra de progreso circular
-                  CircularProgressIndicator(
-                    value: meta.valorActual / meta.valorObjetivo,
-                    color: Colors.purple,
-                    backgroundColor: Colors.grey[200],
-                  ),
-                ],
+              CircularProgressIndicator(
+                value: meta.valorActual / meta.valorObjetivo,
+                color: Colors.purple,
+                backgroundColor: Colors.grey[200],
               ),
               if (meta is MetaCuantificable)
                 Text(
@@ -141,7 +153,6 @@ class GoalGridItem extends StatelessWidget {
     );
   }
 
-  // Función para mostrar el diálogo de checkbox para MetaBooleana
   void _showBooleanMetaDialog(BuildContext context, MetaBooleana meta) {
     showDialog(
       context: context,
@@ -156,29 +167,23 @@ class GoalGridItem extends StatelessWidget {
                 onChanged: (bool? value) {
                   if (value == true) {
                     controller.updateCompletion(index, true);
-                    meta.completar(); // Completar meta booleana
+                    meta.completar();
                   } else {
                     controller.updateCompletion(index, false);
-                    meta.descompletar(); // Descompletar meta booleana
+                    meta.descompletar();
                   }
-                  Get.back(); // Cerrar el diálogo
+                  Get.back();
+                  _updateUserGoals();
                 },
               ),
               Text('Completar'),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(), // Cerrar el diálogo
-              child: Text('Cerrar'),
-            ),
-          ],
         );
       },
     );
   }
 
-  // Función para mostrar el diálogo de progreso (solo para MetaCuantificable)
   void _showProgressDialog(BuildContext context, MetaCuantificable meta) {
     final TextEditingController _progressController = TextEditingController();
 
@@ -206,7 +211,8 @@ class GoalGridItem extends StatelessWidget {
                     value > 0 &&
                     value <= (meta.valorObjetivo - meta.valorActual)) {
                   controller.actualizarProgresoMetaCuantificable(index, value);
-                  Get.back(); // Cerrar el diálogo
+                  Get.back();
+                  _updateUserGoals();
                 } else {
                   Get.snackbar(
                     'Error',
@@ -219,7 +225,7 @@ class GoalGridItem extends StatelessWidget {
               child: Text('Actualizar'),
             ),
             TextButton(
-              onPressed: () => Get.back(), // Cerrar el diálogo
+              onPressed: () => Get.back(),
               child: Text('Cancelar'),
             ),
           ],
@@ -228,7 +234,11 @@ class GoalGridItem extends StatelessWidget {
     );
   }
 
-  // Función para obtener el ícono correcto basado en el nombre de la meta
+  void _updateUserGoals() {
+    final UserController userController = Get.find<UserController>();
+    userController.addMetasToUser(encodedEmail, controller.metas);
+  }
+
   IconData _getIconForMeta(String nombre) {
     switch (nombre) {
       case 'Hidratarse':
@@ -242,7 +252,7 @@ class GoalGridItem extends StatelessWidget {
       case 'Leer un libro':
         return Icons.library_books_outlined;
       default:
-        return Icons.help_outline; // Icono por defecto
+        return Icons.help_outline;
     }
   }
 }

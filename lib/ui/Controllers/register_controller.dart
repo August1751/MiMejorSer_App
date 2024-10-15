@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:convert'; // Para usar la función de hashing
 import './user_controller.dart';
 import './validators.dart';
 import '../pages/metas_primera_vez.dart';
@@ -23,8 +24,12 @@ class SignUpController extends GetxController {
         emailController.text,
         passwordController.text,
       );
-      // Navega a la página de Metas tras el registro exitoso
-      Get.to(MetasPage());
+
+      // Codifica el email antes de enviarlo como argumento
+      String encodedEmail = _encodeEmail(emailController.text);
+
+      // Navega a la página de Metas tras el registro exitoso, pasando el email codificado
+      Get.to(() => MetasPage(), arguments: {'email': encodedEmail});
     } else {
       Get.snackbar('Error', 'Por favor, corrija los errores',
         snackPosition: SnackPosition.BOTTOM,
@@ -33,6 +38,13 @@ class SignUpController extends GetxController {
       );
     }
   }
+
+  // Método para codificar el email usando un hash (sha256 en este caso)
+  String _encodeEmail(String email) {
+  // Convertir el email en bytes y luego codificarlo en base64Url
+  return base64Url.encode(utf8.encode(email));
+}
+
 
   // Validadores del formulario
   String? validateUsername(String? value) {

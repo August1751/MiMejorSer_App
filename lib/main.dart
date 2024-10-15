@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:get/get.dart';
-import 'ui/pages/metas_primera_vez.dart';
 import 'ui/Controllers/user_controller.dart';
 import 'ui/pages/start.dart';
 
