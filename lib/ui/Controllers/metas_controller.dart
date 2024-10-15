@@ -13,13 +13,28 @@ abstract class Meta {
 
 // Class representing a boolean goal (inherits from Meta)
 class MetaBooleana extends Meta {
-  MetaBooleana(super.nombre, [super.completa = false]);
+  double valorActual = 0; // Current value (0 or 1 for booleans)
+  double valorObjetivo = 1; // Target value is always 1 for boolean goals
+
+  MetaBooleana(super.nombre, [super.completa = false]) {
+    if (completa) {
+      valorActual = 1;
+    }
+  }
 
   @override
   void completar() {
     completa = true;
+    valorActual = 1;
+  }
+
+  // Método para "descompletar" si se quita el check
+  void descompletar() {
+    completa = false;
+    valorActual = 0;
   }
 }
+
 
 // Class representing a quantifiable goal (inherits from Meta)
 class MetaCuantificable extends Meta {
