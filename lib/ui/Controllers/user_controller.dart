@@ -138,20 +138,21 @@ class UserController extends GetxController {
   }
 
   void addMetasToUser(String encodedEmail, List<Meta> metas) {
-  // Busca al usuario utilizando el email codificado
-  var user = users.firstWhereOrNull((u) => encodeEmail(u.email) == encodedEmail);
-  
-  if (user != null) {
-    // Agrega las metas al usuario encontrado
-    user.metas.addAll(metas);
-    update(); // Actualiza la interfaz si es necesario
-  } else {
-    Get.snackbar('Error', 'Usuario no encontrado',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
-  }
-}
+    var user =
+        users.firstWhereOrNull((u) => encodeEmail(u.email) == encodedEmail);
 
+    if (user != null) {
+      user.metas.clear(); // Clear existing metas
+      user.metas.addAll(metas); // Add new metas
+      update(); // Update if necessary
+    } else {
+      Get.snackbar(
+        'Error',
+        'Usuario no encontrado',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 }

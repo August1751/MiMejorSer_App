@@ -7,13 +7,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart'; // Para añadir el círcu
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments ?? 'picha'; 
+    final arguments = Get.arguments; 
     final encodedEmail = arguments['email'];
     final UserController userController = Get.find<UserController>();
-    // Buscar al usuario con el encodedEmail
     final user = userController.users
         .firstWhereOrNull((u) => userController.encodeEmail(u.email) == encodedEmail);
-    // Inicializar el controlador de metas con las metas del usuario, si existen
+
     final controller = Get.put(
       MetasController(initialMetas: user?.metas ?? []),
     );
@@ -24,10 +23,10 @@ class Home extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(height: 20), // Espacio superior
+              SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[300], // Fondo gris
+                  color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(8),
                 ),
                 padding: EdgeInsets.all(16),
@@ -37,14 +36,14 @@ class Home extends StatelessWidget {
                     Text(
                       'Mi Tienda',
                       style: TextStyle(
-                        color: Colors.purple, // Texto morado
+                        color: Colors.purple,
                         fontSize: 24,
                       ),
                     ),
                     Container(
                       width: 30,
                       height: 30,
-                      color: Colors.purple, // Cuadrado morado
+                      color: Colors.purple,
                     ),
                   ],
                 ),
@@ -53,10 +52,10 @@ class Home extends StatelessWidget {
               Expanded(
                 child: Obx(() {
                   return GridView.count(
-                    crossAxisCount: 2, // Dos columnas
+                    crossAxisCount: 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 1, // Relación de aspecto 1:1
+                    childAspectRatio: 1,
                     children: List.generate(controller.metas.length, (index) {
                       final meta = controller.metas[index];
                       return GoalGridItem(
@@ -73,13 +72,84 @@ class Home extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Acción al presionar el FAB
-          },
+          onPressed: () => _mostrarDialogoAgregarMeta(context, controller),
           backgroundColor: Colors.purple,
           child: Icon(Icons.add),
         ),
       ),
+    );
+  }
+
+  Future<void> _mostrarDialogoAgregarMeta(BuildContext context, MetasController controller) async {
+    String nuevaMeta = '';
+    bool esCuantificable = false;
+    double valorObjetivo = 0.0;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Nueva Meta'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setDialogState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    onChanged: (value) {
+                      nuevaMeta = value;
+                    },
+                    decoration: const InputDecoration(hintText: 'Escribe una meta'),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      const Text('¿Es cuantificable?'),
+                      Checkbox(
+                        value: esCuantificable,
+                        onChanged: (bool? value) {
+                          setDialogState(() {
+                            esCuantificable = value ?? false;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  if (esCuantificable)
+                    TextField(
+                      onChanged: (value) {
+                        valorObjetivo = double.tryParse(value) ?? 0.0;
+                      },
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(hintText: 'Valor objetivo'),
+                    ),
+                ],
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Agregar'),
+              onPressed: () {
+                if (nuevaMeta.isNotEmpty) {
+                  if (esCuantificable) {
+                    controller.addMetaCuantificable(nuevaMeta, valorObjetivo);
+                  } else {
+                    controller.addMetaBooleana(nuevaMeta);
+                  }
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
