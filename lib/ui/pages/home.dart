@@ -2,23 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
-import 'package:flutter_spinkit/flutter_spinkit.dart'; // Para añadir el círculo de carga
+import 'package:intl/intl.dart'; // Para formatear la fecha
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  DateTime currentDate = DateTime.now(); // Fecha actual
+
   @override
   Widget build(BuildContext context) {
-    final arguments = Get.arguments; 
+    final arguments = Get.arguments;
     final encodedEmail = arguments['email'];
     final UserController userController = Get.find<UserController>();
-    final user = userController.users
-        .firstWhereOrNull((u) => userController.encodeEmail(u.email) == encodedEmail);
+    final user = userController.users.firstWhereOrNull(
+        (u) => userController.encodeEmail(u.email) == encodedEmail);
 
-    final controller = Get.put(
+    final MetasController controller = Get.put(
       MetasController(initialMetas: user?.metas ?? []),
     );
 
+    // Formatear la fecha actual
+    String formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
+
+
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(user?.username ?? 'Usuario', style: TextStyle(fontSize: 18,color:Colors.white)),
+              SizedBox(height: 4),
+              Text('Fecha: $formattedDate', style: TextStyle(fontSize: 14,color: Colors.white)),
+            ],
+          ),
+          backgroundColor: Colors.purple,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                setState(() {
+                  // Avanzar al siguiente día
+                  currentDate = currentDate.add(Duration(days: 1));
+                  // Reiniciar las metas del día
+                  controller.reiniciarMetasDiarias();
+                  userController.addMetasToUser(encodedEmail, controller.metas);
+                });
+              },
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -80,7 +116,8 @@ class Home extends StatelessWidget {
     );
   }
 
-  Future<void> _mostrarDialogoAgregarMeta(BuildContext context, MetasController controller) async {
+  Future<void> _mostrarDialogoAgregarMeta(
+      BuildContext context, MetasController controller) async {
     String nuevaMeta = '';
     bool esCuantificable = false;
     double valorObjetivo = 0.0;
@@ -99,7 +136,8 @@ class Home extends StatelessWidget {
                     onChanged: (value) {
                       nuevaMeta = value;
                     },
-                    decoration: const InputDecoration(hintText: 'Escribe una meta'),
+                    decoration:
+                        const InputDecoration(hintText: 'Escribe una meta'),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -121,7 +159,8 @@ class Home extends StatelessWidget {
                         valorObjetivo = double.tryParse(value) ?? 0.0;
                       },
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(hintText: 'Valor objetivo'),
+                      decoration:
+                          const InputDecoration(hintText: 'Valor objetivo'),
                     ),
                 ],
               );

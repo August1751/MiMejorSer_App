@@ -10,6 +10,7 @@ class User {
   String password;
   int puntos = 0;
   List<Meta> metas = []; // Lista de metas asociadas al usuario
+  DateTime? dateTime; // Nueva variable para almacenar la fecha
 
   User(this.username, this.email, this.password);
 
@@ -57,7 +58,7 @@ class UserController extends GetxController {
   String encodeEmail(String email) {
     return base64Url.encode(utf8.encode(email));
   }
-
+  
   // Método para eliminar un usuario por email
   void removeUserByEmail(String email) {
     users.removeWhere((user) => user.email == email);
@@ -101,6 +102,22 @@ class UserController extends GetxController {
       user.agregarMeta(meta);
       metasController.addMeta(meta); // Agregar la meta al MetasController
       Get.snackbar('Éxito', 'Meta agregada a ${user.username}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
+    } else {
+      Get.snackbar('Error', 'Usuario no encontrado',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    }
+  }
+  // Método para cambiar la fecha de un usuario
+  void setUserDateTime(String email, DateTime dateTime) {
+    var user = findUserByEmail(email);
+    if (user != null) {
+      user.dateTime = dateTime; // Cambiar la fecha
+      Get.snackbar('Éxito', 'Fecha actualizada para ${user.username}',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white);

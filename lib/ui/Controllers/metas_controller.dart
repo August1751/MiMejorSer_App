@@ -104,6 +104,18 @@ class MetasController extends GetxController {
       metas.refresh(); // Refresca la lista para actualizar la UI
     }
   }
+
+  void reiniciarMetasDiarias() {
+    for (var meta in metas) {
+      if (meta is MetaCuantificable) {
+        meta.valorActual = 0; // Reinicia el valor actual
+      } else if (meta is MetaBooleana) {
+        meta.completa = false;
+        meta.valorActual = 0; // Reinicia las metas booleanas
+      }
+    }
+    update(); // Notifica que las metas han sido actualizadas
+  }
 }
 
 
