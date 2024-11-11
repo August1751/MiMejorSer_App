@@ -11,10 +11,10 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home>{
+class _HomeState extends State<Home> {
   late DateTime currentDate; // Fecha actual
 
-   @override
+  @override
   void initState() {
     super.initState();
     final arguments = Get.arguments;
@@ -24,6 +24,7 @@ class _HomeState extends State<Home>{
         (u) => userController.encodeEmail(u.email) == encodedEmail);
     currentDate = user?.dateTime ?? DateTime.now();
   }
+
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -39,40 +40,48 @@ class _HomeState extends State<Home>{
     // Formatear la fecha actual
     String formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
 
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-  title: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(user?.username ?? 'Usuario', style: TextStyle(fontSize: 18, color: Colors.white)),
-      SizedBox(height: 4),
-      Text('Fecha: $formattedDate', style: TextStyle(fontSize: 14, color: Colors.white)),
-    ],
-  ),
-  backgroundColor: Colors.purple,
-  actions: [
-    IconButton(
-      icon: Icon(Icons.calendar_today),
-      onPressed: () {
-        setState(() {
-          currentDate = currentDate.add(Duration(days: 1));
-          userController.setUserDateTime(encodedEmail, currentDate);
-          controller.reiniciarMetasDiarias();
-          userController.addMetasToUser(encodedEmail, controller.metas);
-        });
-      },
-    ),
-    IconButton(
-      icon: Icon(Icons.star), // Ícono para ir a la página de puntos
-      onPressed: () {
-        Get.to(PuntosPage(),arguments: {'email': encodedEmail}); // Navegar a la página de puntos
-      },
-    ),
-  ],
-),
-
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(user?.username ?? 'Usuario',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 4),
+              Text('Fecha: $formattedDate',
+                  style: TextStyle(fontSize: 14, color: Colors.white)),
+            ],
+          ),
+          backgroundColor: Colors.purple,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: currentDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    currentDate = pickedDate;
+                    userController.setUserDateTime(encodedEmail, currentDate);
+                    controller.reiniciarMetasDiarias();
+                    userController.addMetasToUser(encodedEmail, controller.metas);
+                  });
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.star), // Ícono para ir a la página de puntos
+              onPressed: () {
+                Get.to(PuntosPage(), arguments: {'email': encodedEmail});
+              },
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
