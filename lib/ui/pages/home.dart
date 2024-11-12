@@ -67,7 +67,7 @@ class _HomeState extends State<Home>{
     IconButton(
       icon: Icon(Icons.star), // Ícono para ir a la página de puntos
       onPressed: () {
-        Get.to(PuntosPage(),arguments: {'email': encodedEmail}); // Navegar a la página de puntos
+        Get.toNamed('/points',arguments: {'email': encodedEmail}); // Navegar a la página de puntos
       },
     ),
   ],

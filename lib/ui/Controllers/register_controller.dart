@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'dart:convert'; // Para usar la función de hashing
 import './user_controller.dart';
 import './validators.dart';
-import '../pages/metas_primera_vez.dart';
 
 class SignUpController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -30,7 +29,7 @@ class SignUpController extends GetxController {
 
       // Navega a la página de Metas tras el registro exitoso, pasando el email codificado
       if(validate){
-        Get.to(() => MetasPage(), arguments: {'email': encodedEmail});
+        Get.toNamed('/metas', arguments: {'email': encodedEmail});
       }
       
     } else {

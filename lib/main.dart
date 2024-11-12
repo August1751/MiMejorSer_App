@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'ui/Controllers/user_controller.dart';
 import 'ui/pages/start.dart';
+import 'ui/pages/iniciar_sesion.dart';
+import 'ui/pages/registrarse.dart';
+import 'ui/pages/metas_primera_vez.dart';
+import 'ui/pages/puntos_page.dart';
+import 'ui/pages/home.dart';
+
 
 void main() {
   Get.put(UserController());
@@ -23,7 +29,15 @@ class MyApp extends StatelessWidget {
             tertiary: Colors.purple,
             error: Colors.red,
           ),),
-      home: Start(), // Utiliza la pantalla de login
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => Start()),
+        GetPage(name: '/login', page: () => LoginScreen()),
+        GetPage(name: '/signup', page: () => SignUpPage()),
+        GetPage(name: '/metas', page: () => MetasPage()),
+        GetPage(name: '/home', page: () => Home()),
+        GetPage(name: '/points', page: () => PuntosPage())
+      ]// Utiliza la pantalla de login
     );
   }
 }
