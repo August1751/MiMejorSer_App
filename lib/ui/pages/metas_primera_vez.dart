@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart';
-import 'home.dart';
+
 class MetasPage extends StatefulWidget{
    @override
   const MetasPage({Key? key}) : super(key: key);

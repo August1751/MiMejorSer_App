@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'registrarse.dart';
 import '../Controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {

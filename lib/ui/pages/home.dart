@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
 import 'package:intl/intl.dart'; // Para formatear la fecha
-import '../pages/puntos_page.dart'; // Importar la nueva página de puntos
 
 class Home extends StatefulWidget {
   @override
@@ -67,7 +66,7 @@ class _HomeState extends State<Home> {
     IconButton(
       icon: Icon(Icons.star), // Ícono para ir a la página de puntos
       onPressed: () {
-        Get.to(PuntosPage(),arguments: {'email': encodedEmail}); // Navegar a la página de puntos
+        Get.toNamed('/points',arguments: {'email': encodedEmail}); // Navegar a la página de puntos // Navegar a la página de puntos
       },
     ),
   ],
