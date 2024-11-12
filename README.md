@@ -16,3 +16,5 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
  Link video: https://youtu.be/1Z8fNUInBcs?si=pqq2JrnhxY76WPRI
+
+Debajo del carchivo .metadata esta el archivo PDF con las pruebas de ambos miembros del grupo
