@@ -4,7 +4,6 @@ import 'package:mimejorser_app/ui/Controllers/user_controller.dart';
 import '../Controllers/metas_controller.dart';
 
 class PuntosPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -15,10 +14,19 @@ class PuntosPage extends StatelessWidget {
     final MetasController controller = Get.put(
       MetasController(initialMetas: user?.metas ?? []),
     );
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis Puntos'),
-        backgroundColor: Colors.purple,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: Center(
         child: Obx(() {
@@ -32,7 +40,11 @@ class PuntosPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '${controller.puntos.value}', // Mostramos los puntos actuales
-                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.purple),
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
+                ),
               ),
             ],
           );

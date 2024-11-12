@@ -91,12 +91,24 @@ class MetasController extends GetxController {
   }
 
   void updateCompletion(int index, bool isCompleted) {
-    if (isCompleted && !metas[index].completa) {
-      metas[index].completar();
-      puntos += 5; // Añadir 5 puntos cuando se completa la meta
-    } 
-    metas.refresh(); // Refrescar la lista
+  if (isCompleted && !metas[index].completa) {
+    metas[index].completar();
+    puntos += 5; // Añadir 5 puntos cuando se completa la meta
+
+    // Mover la meta completada al principio
+    var metaCompletada = metas.removeAt(index);
+    metas.insert(0, metaCompletada);
+  } else if (!isCompleted && metas[index].completa) {
+    metas[index].descompletar();
+    puntos -= 5; // Restar puntos si la meta se descompleta
+
+    // Mover la meta no completada al final
+    var metaDescompletada = metas.removeAt(index);
+    metas.add(metaDescompletada);
   }
+  metas.refresh(); // Refrescar la lista
+}
+
 
   void actualizarProgresoMetaCuantificable(int index, double valor) {
     if (metas[index] is MetaCuantificable) {
