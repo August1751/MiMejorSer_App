@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'dart:convert'; // Para usar la función de hashing
 import './user_controller.dart';
 import './validators.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'dart:convert';
+import './user_controller.dart';
 
 class SignUpController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -10,28 +14,26 @@ class SignUpController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Inyecta el UserController para registrar nuevos usuarios
+  // Access the UserController instance
   final UserController userController = Get.find<UserController>();
 
-  // Función para validar y registrarse
+  // Function to validate and sign up
   void signUp() {
     final form = formKey.currentState;
     if (form != null && form.validate()) {
-      // Añade el nuevo usuario al UserController
-      bool validate= userController.addUser(
+      // Add a new user using UserController
+      bool validate = userController.addUser(
         usernameController.text,
         emailController.text,
         passwordController.text,
       );
 
-      // Codifica el email antes de enviarlo como argumento
       String encodedEmail = _encodeEmail(emailController.text);
 
-      // Navega a la página de Metas tras el registro exitoso, pasando el email codificado
-      if(validate){
+      // Navigate to the Metas page if signup is successful
+      if (validate) {
         Get.toNamed('/metas', arguments: {'email': encodedEmail});
       }
-      
     } else {
       Get.snackbar('Error', 'Por favor, corrija los errores',
         snackPosition: SnackPosition.BOTTOM,
@@ -41,10 +43,22 @@ class SignUpController extends GetxController {
     }
   }
 
-  // Método para codificar el email usando un hash (sha256 en este caso)
   String _encodeEmail(String email) {
-  // Convertir el email en bytes y luego codificarlo en base64Url
-  return base64Url.encode(utf8.encode(email));
+    return base64Url.encode(utf8.encode(email));
+  }
+
+  // Validators
+  String? validateUsername(String? value) {
+    // Add your validation logic
+  }
+
+  String? validateEmail(String? value) {
+    // Add your validation logic
+  }
+
+  String? validatePassword(String? value) {
+    // Add your validation logic
+  }
 }
 
 

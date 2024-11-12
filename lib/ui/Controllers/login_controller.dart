@@ -4,6 +4,7 @@ import 'dart:convert';
 import './validators.dart';
 import './user_controller.dart';
 
+
 class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -12,18 +13,18 @@ class LoginController extends GetxController {
   var email = ''.obs;
   var password = ''.obs;
 
-  // Inyecta el UserController para acceder a los usuarios
+  // Access the UserController instance
   final UserController userController = Get.find<UserController>();
 
-  // Función para validar e iniciar sesión
+  // Function to validate and login
   void login() {
     final form = formKey.currentState;
     if (form != null && form.validate()) {
-      // Verifica si existe el usuario con las credenciales correctas
+      // Retrieve the user from the Hive box using UserController
       var user = userController.findUserByEmail(emailController.text);
       if (user != null && user.password == passwordController.text) {
         String encodedEmail = _encodeEmail(emailController.text);
-        Get.toNamed('/home',arguments: {'email': encodedEmail}); // Navega a Home si el login es exitoso
+        Get.toNamed('/home', arguments: {'email': encodedEmail});
       } else {
         Get.snackbar(
           'Error',
@@ -45,10 +46,9 @@ class LoginController extends GetxController {
   }
 
   String _encodeEmail(String email) {
-    // Convertir el email en bytes y luego codificarlo en base64Url
     return base64Url.encode(utf8.encode(email));
   }
-
+  
   // Validadores del formulario
   String? validateEmail(String? value) {
     return FormValidators.validateEmail(value);

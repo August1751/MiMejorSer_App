@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import '../storage/user_model.dart';
 import 'ui/Controllers/user_controller.dart';
 import 'ui/pages/start.dart';
 import 'ui/pages/iniciar_sesion.dart';
@@ -10,7 +12,15 @@ import 'ui/pages/home.dart';
 
 
 void main() {
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(UserAdapter());
+
+  Hive.registerAdapter(MetaBooleanaAdapter());
+  Hive.registerAdapter(MetaCuantificableAdapter());
+  
   Get.put(UserController());
+
   runApp(const MyApp());
 }
 
