@@ -2,20 +2,20 @@ import 'package:get/get.dart';
 
 // Abstract class Meta
 abstract class Meta {
-  String nombre; // Name of the goal
-  bool completa; // Indicates if the goal is complete or not
+  String nombre; // Nombre de la meta
+  bool completa; // Indica si la meta está completa o no
 
   Meta(this.nombre, this.completa);
 
-  // Abstract method to complete the goal
+  // Métodos abstractos para completar y descompletar la meta
   void completar();
   void descompletar();
 }
 
-// Class representing a boolean goal (inherits from Meta)
+// Clase que representa una meta booleana (hereda de Meta)
 class MetaBooleana extends Meta {
-  double valorActual = 0; // Current value (0 or 1 for booleans)
-  double valorObjetivo = 1; // Target value is always 1 for boolean goals
+  double valorActual = 0; // Valor actual (0 o 1 para booleanos)
+  double valorObjetivo = 1; // El valor objetivo siempre es 1 para metas booleanas
 
   MetaBooleana(super.nombre, [super.completa = false]) {
     if (completa) {
@@ -29,7 +29,6 @@ class MetaBooleana extends Meta {
     valorActual = 1;
   }
 
-  // Método para "descompletar" si se quita el check
   @override
   void descompletar() {
     completa = false;
@@ -37,15 +36,15 @@ class MetaBooleana extends Meta {
   }
 }
 
-// Class representing a quantifiable goal (inherits from Meta)
+// Clase que representa una meta cuantificable (hereda de Meta)
 class MetaCuantificable extends Meta {
-  double valorActual = 0; // Current value of the quantifiable goal
-  double valorObjetivo; // Target value to achieve
+  double valorActual = 0; // Valor actual de la meta cuantificable
+  double valorObjetivo; // Valor objetivo a alcanzar
 
   MetaCuantificable(String nombre, this.valorObjetivo, [this.valorActual = 0])
       : super(nombre, valorActual >= valorObjetivo);
 
-  // Method to update progress towards the goal
+  // Método para actualizar el progreso hacia la meta
   void actualizarProgreso(double valor) {
     valorActual += valor;
     if (valorActual >= valorObjetivo) {
@@ -61,6 +60,7 @@ class MetaCuantificable extends Meta {
   @override
   void descompletar() {
     valorActual = 0;
+    completa = false;
   }
 }
 
@@ -92,6 +92,7 @@ class MetasController extends GetxController {
     metas.add(MetaCuantificable(nombre, valorObjetivo));
   }
 
+  // Método para actualizar el estado de completitud y reordenar las metas
   void updateCompletion(int index, bool isCompleted) {
   if (isCompleted && !metas[index].completa) {
     metas[index].completar();
@@ -112,6 +113,8 @@ class MetasController extends GetxController {
 }
 
 
+
+
   void actualizarProgresoMetaCuantificable(int index, double valor) {
     if (metas[index] is MetaCuantificable) {
       (metas[index] as MetaCuantificable).actualizarProgreso(valor);
@@ -128,23 +131,21 @@ class MetasController extends GetxController {
         meta.valorActual = 0;
       } else if (meta is MetaBooleana) {
         if (meta.completa) {
-          puntos -=
-              5; // Restar los puntos si la meta estaba completa y se reinicia
+          puntos -= 5; // Restar puntos si la meta estaba completa y se reinicia
         }
-        meta.completa = false;
-        meta.valorActual = 0;
+        meta.descompletar(); // Descompletar la meta booleana
       }
     }
-    update();
+    update(); // Actualizar el estado del controlador
   }
 }
 
 class MetasPageController extends GetxController {
-  // Observable lists for metas and selected
+  // Listas observables para metas y seleccionadas
   var metas = <Meta>[].obs;
   var selected = <bool>[].obs;
 
-  // Constructor to initialize the controller with default metas
+  // Constructor para inicializar el controlador con metas por defecto
   @override
   void onInit() {
     super.onInit();
@@ -165,23 +166,24 @@ class MetasPageController extends GetxController {
       false,
       false,
       false
-    ]); // Initially, all metas are not completed
+    ]); // Inicialmente, todas las metas no están completadas
   }
 
-  // Function to add a new meta
+  // Método para agregar una nueva meta booleana
   void addMetaBooleana(String nombre) {
     metas.add(MetaBooleana(nombre));
-    selected.add(false); // Initially not completed
+    selected.add(false); // Inicialmente no completada
   }
 
+  // Método para agregar una nueva meta cuantificable
   void addMetaCuantificable(String nombre, double valorObjetivo) {
     metas.add(MetaCuantificable(nombre, valorObjetivo));
-    selected.add(false); // Initially not completed
+    selected.add(false); // Inicialmente no completada
   }
 
-  // Function to update the completion status of a meta
+  // Método para actualizar el estado de completitud de una meta
   void updateCompletion(int index, bool isSelected) {
-    selected[index] = isSelected; // Update the completion state
-    // Since 'completadas' is an observable list, Obx will rebuild on change
+    selected[index] = isSelected; // Actualizar el estado de completitud
+    // La lista observable 'selected' hará que Obx reconstruya cuando haya cambios
   }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
 import 'package:intl/intl.dart'; // Para formatear la fecha
+import '../pages/puntos_page.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -37,6 +38,13 @@ class _HomeState extends State<Home> {
       MetasController(initialMetas: user?.metas ?? []),
     );
 
+    // Ordenar las metas: completadas primero, no completadas después
+    final orderedMetas = controller.metas..sort((a, b) {
+      if (a.completa && !b.completa) return -1;
+      if (!a.completa && b.completa) return 1;
+      return 0;
+    });
+
     // Formatear la fecha actual
     String formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
 
@@ -46,17 +54,29 @@ class _HomeState extends State<Home> {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(user?.username ?? 'Usuario',
-                  style: const TextStyle(fontSize: 18, color: Colors.white)),
-              const SizedBox(height: 4),
-              Text('Fecha: $formattedDate',
-                  style: const TextStyle(fontSize: 14, color: Colors.white)),
+              Text(
+                user?.username ?? 'Usuario',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Fecha: $formattedDate',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
             ],
           ),
-          backgroundColor: Colors.purple,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.calendar_today),
+              icon: Icon(Icons.calendar_today),
               onPressed: () async {
                 DateTime? pickedDate = await showDatePicker(
                   context: context,
@@ -75,9 +95,9 @@ class _HomeState extends State<Home> {
               },
             ),
             IconButton(
-              icon: const Icon(Icons.star), // Ícono para ir a la página de puntos
+              icon: Icon(Icons.star),
               onPressed: () {
-                Get.toNamed('/points',arguments: {'email': encodedEmail});
+                Get.to(PuntosPage(), arguments: {'email': encodedEmail});
               },
             ),
           ],
@@ -119,8 +139,8 @@ class _HomeState extends State<Home> {
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     childAspectRatio: 1,
-                    children: List.generate(controller.metas.length, (index) {
-                      final meta = controller.metas[index];
+                    children: List.generate(orderedMetas.length, (index) {
+                      final meta = orderedMetas[index];
                       return GoalGridItem(
                         meta: meta,
                         index: index,
@@ -226,7 +246,8 @@ class GoalGridItem extends StatelessWidget {
   final MetasController controller;
   final String encodedEmail;
 
-  const GoalGridItem({super.key, 
+  const GoalGridItem({
+    super.key,
     required this.meta,
     required this.index,
     required this.controller,
@@ -286,37 +307,36 @@ class GoalGridItem extends StatelessWidget {
   }
 
   void _showBooleanMetaDialog(BuildContext context, MetaBooleana meta) {
-    if(meta.completa != true){
+    if (meta.completa != true) {
       showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Completar Meta'),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Checkbox(
-                value: meta.completa,
-                onChanged: (bool? value) {
-                  if (value == true) {
-                    meta.completar();
-                    controller.updateCompletion(index, true);                 
-                  } else {
-                    meta.descompletar();
-                    controller.updateCompletion(index, false);
-                  }
-                  Get.back();
-                  _updateUserGoals();
-                },
-              ),
-              const Text('Completar'),
-            ],
-          ),
-        );
-      },
-    );
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Completar Meta'),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: meta.completa,
+                  onChanged: (bool? value) {
+                    if (value == true) {
+                      meta.completar();
+                      controller.updateCompletion(index, true);
+                    } else {
+                      meta.descompletar();
+                      controller.updateCompletion(index, false);
+                    }
+                    Get.back();
+                    _updateUserGoals();
+                  },
+                ),
+                const Text('Completar'),
+              ],
+            ),
+          );
+        },
+      );
     }
-    
   }
 
   void _showProgressDialog(BuildContext context, MetaCuantificable meta) {
