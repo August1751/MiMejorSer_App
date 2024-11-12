@@ -3,20 +3,19 @@ import 'package:get/get.dart';
 import '../Controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key})
-      : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Initialize the controller
-    final LoginController _controller = Get.put(LoginController());
+    final LoginController controller = Get.put(LoginController());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Iniciar Sesión"),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               gradient: LinearGradient(
                   colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)])),
         ),
@@ -25,7 +24,7 @@ class LoginScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
           child: Form(
-            key: _controller.formKey,
+            key: controller.formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -38,21 +37,21 @@ class LoginScreen extends StatelessWidget {
                 ),
                 TextFormField(
                   key: const Key('TextFormFieldLoginEmail'),
-                  controller: _controller.emailController,
+                  controller: controller.emailController,
                   decoration:
                       const InputDecoration(labelText: 'Correo Electronico'),
-                  validator: _controller.validateEmail,
+                  validator: controller.validateEmail,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
                   key: const Key('TextFormFieldLoginPassword'),
-                  controller: _controller.passwordController,
+                  controller: controller.passwordController,
                   decoration: const InputDecoration(labelText: "Contraseña"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
-                  validator: _controller.validatePassword,
+                  validator: controller.validatePassword,
                 ),
                 const SizedBox(
                   height: 20,
@@ -62,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       // Dismiss keyboard
                       FocusScope.of(context).requestFocus(FocusNode());
-                      _controller.login();
+                      controller.login();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple, // Color del botón
@@ -95,7 +94,7 @@ class LoginScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      side: BorderSide(color: Colors.deepPurple)),
+                      side: const BorderSide(color: Colors.deepPurple)),
                   child: const Text('Registrarse'),
                 ),
               ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Start extends StatefulWidget {
-  Start({super.key});
+  const Start({super.key});
 
   @override
   _StartState createState() => _StartState();
@@ -82,7 +82,7 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(gradient: LinearGradient(
+        decoration: const BoxDecoration(gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Color(0xFFD4A5FF),Color(0xFFA5E6FF)]
@@ -179,12 +179,12 @@ class CarouselItem extends StatelessWidget {
   final Widget? w2; // Botón opcional
 
   const CarouselItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     this.w1, // Parámetro opcional para la imagen
     this.w2, // Parámetro opcional para el botón
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

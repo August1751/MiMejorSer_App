@@ -4,6 +4,8 @@ import 'package:mimejorser_app/ui/Controllers/user_controller.dart';
 import '../Controllers/metas_controller.dart';
 
 class PuntosPage extends StatelessWidget {
+  const PuntosPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -17,9 +19,9 @@ class PuntosPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis Puntos'),
+        title: const Text('Mis Puntos'),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)],
               begin: Alignment.topLeft,
@@ -33,14 +35,14 @@ class PuntosPage extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Puntos acumulados:',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 '${controller.puntos.value}', // Mostramos los puntos actuales
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: Colors.purple,

@@ -6,7 +6,8 @@ import 'package:intl/intl.dart'; // Para formatear la fecha
 
 class Home extends StatefulWidget {
   @override
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
+  @override
   _HomeState createState() => _HomeState();
 }
 
@@ -46,16 +47,16 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(user?.username ?? 'Usuario',
-                  style: TextStyle(fontSize: 18, color: Colors.white)),
-              SizedBox(height: 4),
+                  style: const TextStyle(fontSize: 18, color: Colors.white)),
+              const SizedBox(height: 4),
               Text('Fecha: $formattedDate',
-                  style: TextStyle(fontSize: 14, color: Colors.white)),
+                  style: const TextStyle(fontSize: 14, color: Colors.white)),
             ],
           ),
           backgroundColor: Colors.purple,
           actions: [
             IconButton(
-              icon: Icon(Icons.calendar_today),
+              icon: const Icon(Icons.calendar_today),
               onPressed: () async {
                 DateTime? pickedDate = await showDatePicker(
                   context: context,
@@ -74,9 +75,9 @@ class _HomeState extends State<Home> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.star), // Ícono para ir a la página de puntos
+              icon: const Icon(Icons.star), // Ícono para ir a la página de puntos
               onPressed: () {
-                Get.to(PuntosPage(), arguments: {'email': encodedEmail});
+                Get.toNamed('/points',arguments: {'email': encodedEmail});
               },
             ),
           ],
@@ -85,17 +86,17 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Mi Tienda',
                       style: TextStyle(
                         color: Colors.purple,
@@ -110,7 +111,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: Obx(() {
                   return GridView.count(
@@ -136,7 +137,7 @@ class _HomeState extends State<Home> {
         floatingActionButton: FloatingActionButton(
           onPressed: () => _mostrarDialogoAgregarMeta(context, controller),
           backgroundColor: Colors.purple,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ),
       ),
     );
@@ -225,7 +226,7 @@ class GoalGridItem extends StatelessWidget {
   final MetasController controller;
   final String encodedEmail;
 
-  GoalGridItem({
+  const GoalGridItem({super.key, 
     required this.meta,
     required this.index,
     required this.controller,
@@ -247,7 +248,7 @@ class GoalGridItem extends StatelessWidget {
           color: Colors.grey[300], // Fondo gris claro
           borderRadius: BorderRadius.circular(8), // Bordes redondeados
         ),
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -257,16 +258,16 @@ class GoalGridItem extends StatelessWidget {
                 size: 40,
                 color: Colors.purple,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 meta.nombre,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.purple,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CircularProgressIndicator(
                 value: meta.valorActual / meta.valorObjetivo,
                 color: Colors.purple,
@@ -275,7 +276,7 @@ class GoalGridItem extends StatelessWidget {
               if (meta is MetaCuantificable)
                 Text(
                   'Meta: ${meta.valorActual}/${meta.valorObjetivo}',
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
             ],
           ),
@@ -290,7 +291,7 @@ class GoalGridItem extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Completar Meta'),
+          title: const Text('Completar Meta'),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -298,17 +299,17 @@ class GoalGridItem extends StatelessWidget {
                 value: meta.completa,
                 onChanged: (bool? value) {
                   if (value == true) {
-                    controller.updateCompletion(index, true);
                     meta.completar();
+                    controller.updateCompletion(index, true);                 
                   } else {
-                    controller.updateCompletion(index, false);
                     meta.descompletar();
+                    controller.updateCompletion(index, false);
                   }
                   Get.back();
                   _updateUserGoals();
                 },
               ),
-              Text('Completar'),
+              const Text('Completar'),
             ],
           ),
         );
@@ -319,28 +320,28 @@ class GoalGridItem extends StatelessWidget {
   }
 
   void _showProgressDialog(BuildContext context, MetaCuantificable meta) {
-    final TextEditingController _progressController = TextEditingController();
+    final TextEditingController progressController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Actualizar Progreso'),
+          title: const Text('Actualizar Progreso'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Introduce la cantidad a añadir'),
+              const Text('Introduce la cantidad a añadir'),
               TextField(
-                controller: _progressController,
+                controller: progressController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(hintText: 'Cantidad'),
+                decoration: const InputDecoration(hintText: 'Cantidad'),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                final double? value = double.tryParse(_progressController.text);
+                final double? value = double.tryParse(progressController.text);
                 if (value != null &&
                     value > 0 &&
                     value <= (meta.valorObjetivo - meta.valorActual)) {
@@ -356,11 +357,11 @@ class GoalGridItem extends StatelessWidget {
                   );
                 }
               },
-              child: Text('Actualizar'),
+              child: const Text('Actualizar'),
             ),
             TextButton(
               onPressed: () => Get.back(),
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
             ),
           ],
         );

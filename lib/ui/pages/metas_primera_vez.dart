@@ -5,7 +5,8 @@ import '../Controllers/user_controller.dart';
 
 class MetasPage extends StatefulWidget{
    @override
-  const MetasPage({Key? key}) : super(key: key);
+  const MetasPage({super.key});
+  @override
   _MetasPage createState() => _MetasPage();
 }
 
@@ -20,7 +21,7 @@ class _MetasPage extends State<MetasPage> {
     final arguments = Get.arguments;
     final String encodedEmail = arguments['email'];
 
-    Future<void> _mostrarDialogoAgregarMeta(BuildContext context) async {
+    Future<void> mostrarDialogoAgregarMeta(BuildContext context) async {
       String nuevaMeta = '';
       bool esCuantificable = false;
       double valorObjetivo = 0.0;
@@ -154,7 +155,7 @@ class _MetasPage extends State<MetasPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => _mostrarDialogoAgregarMeta(context),
+            onPressed: () => mostrarDialogoAgregarMeta(context),
             backgroundColor: Colors.deepPurple,
             child: const Icon(Icons.add, color: Colors.white),
           ),

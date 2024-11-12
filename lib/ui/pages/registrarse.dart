@@ -3,19 +3,19 @@ import 'package:get/get.dart';
 import '../Controllers/register_controller.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Initialize the controller
-    final SignUpController _controller = Get.put(SignUpController());
+    final SignUpController controller = Get.put(SignUpController());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text("Registrarse"),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.centerRight,
                 end: Alignment.centerLeft,
@@ -26,7 +26,7 @@ class SignUpPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
           child: Form(
-            key: _controller.formKey,
+            key: controller.formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -37,28 +37,28 @@ class SignUpPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 TextFormField(
                     key: const Key('TextFormFieldSignUpUsername'),
-                    controller: _controller.usernameController,
+                    controller: controller.usernameController,
                     decoration: const InputDecoration(
                         border: UnderlineInputBorder(), labelText: 'Usuario'),
-                    validator: _controller.validateUsername,
+                    validator: controller.validateUsername,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   key: const Key('TextFormFieldSignUpEmail'),
-                  controller: _controller.emailController,
+                  controller: controller.emailController,
                   decoration: const InputDecoration(
                       border: UnderlineInputBorder(), labelText: 'Correo electronico'),
-                  validator: _controller.validateEmail,
+                  validator: controller.validateEmail,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   key: const Key('TextFormFieldSignUpPassword'),
-                  controller: _controller.passwordController,
+                  controller: controller.passwordController,
                   decoration: const InputDecoration(
                       border: UnderlineInputBorder(), labelText: "Contraseña"),
                   keyboardType: TextInputType.number,
                   obscureText: true,
-                  validator: _controller.validatePassword,
+                  validator: controller.validatePassword,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -66,7 +66,7 @@ class SignUpPage extends StatelessWidget {
                     onPressed: () {
                       // Dismiss the keyboard
                       FocusScope.of(context).requestFocus(FocusNode());
-                      _controller.signUp(); // Use the controller's signup method
+                      controller.signUp(); // Use the controller's signup method
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,

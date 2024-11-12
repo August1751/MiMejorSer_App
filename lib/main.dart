@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => Start()),
-        GetPage(name: '/login', page: () => LoginScreen()),
-        GetPage(name: '/signup', page: () => SignUpPage()),
-        GetPage(name: '/metas', page: () => MetasPage()),
-        GetPage(name: '/home', page: () => Home()),
+        GetPage(name: '/login', page: () => const LoginScreen()),
+        GetPage(name: '/signup', page: () => const SignUpPage()),
+        GetPage(name: '/metas', page: () => const MetasPage()),
+        GetPage(name: '/home', page: () => const Home()),
         GetPage(name: '/points', page: () => PuntosPage())
       ]// Utiliza la pantalla de login
     );

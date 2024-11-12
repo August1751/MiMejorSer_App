@@ -30,6 +30,7 @@ class MetaBooleana extends Meta {
   }
 
   // Método para "descompletar" si se quita el check
+  @override
   void descompletar() {
     completa = false;
     valorActual = 0;
@@ -57,6 +58,7 @@ class MetaCuantificable extends Meta {
     completa = true;
   }
 
+  @override
   void descompletar() {
     valorActual = 0;
   }
