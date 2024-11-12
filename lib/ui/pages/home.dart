@@ -11,10 +11,10 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home>{
+class _HomeState extends State<Home> {
   late DateTime currentDate; // Fecha actual
 
-   @override
+  @override
   void initState() {
     super.initState();
     final arguments = Get.arguments;
@@ -24,6 +24,7 @@ class _HomeState extends State<Home>{
         (u) => userController.encodeEmail(u.email) == encodedEmail);
     currentDate = user?.dateTime ?? DateTime.now();
   }
+
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
@@ -38,7 +39,6 @@ class _HomeState extends State<Home>{
 
     // Formatear la fecha actual
     String formattedDate = DateFormat('dd/MM/yyyy').format(currentDate);
-
 
     return MaterialApp(
       home: Scaffold(
@@ -67,7 +67,7 @@ class _HomeState extends State<Home>{
     IconButton(
       icon: Icon(Icons.star), // Ícono para ir a la página de puntos
       onPressed: () {
-        Get.toNamed('/points',arguments: {'email': encodedEmail}); // Navegar a la página de puntos
+        Get.to(PuntosPage(),arguments: {'email': encodedEmail}); // Navegar a la página de puntos
       },
     ),
   ],
