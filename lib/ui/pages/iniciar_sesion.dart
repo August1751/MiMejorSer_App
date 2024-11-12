@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'registrarse.dart';
 import '../Controllers/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key, required this.email, required this.password})
+  const LoginScreen({Key? key})
       : super(key: key);
-
-  final String email;
-  final String password;
 
   @override
   Widget build(BuildContext context) {
     // Initialize the controller
     final LoginController _controller = Get.put(LoginController());
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -85,7 +82,7 @@ class LoginScreen extends StatelessWidget {
                 ), // Espacio entre los botones
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(const SignUpPage());
+                    Get.toNamed('/signup');
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white, // Color del botón

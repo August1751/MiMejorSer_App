@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart';
-import 'home.dart';
+
 class MetasPage extends StatefulWidget{
    @override
   const MetasPage({Key? key}) : super(key: key);
@@ -101,6 +101,7 @@ class _MetasPage extends State<MetasPage> {
             gradient: LinearGradient(colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)]),
           ),
         ),
+        leading:BackButton( onPressed:(){ Get.offNamed('/login');})
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -172,7 +173,7 @@ class _MetasPage extends State<MetasPage> {
               _userController.addMetasToUser(encodedEmail, selectedGoals);
 
               // Navega a Home con el email codificado
-              Get.to(() => Home(), arguments: {'email': encodedEmail});
+              Get.toNamed('/home', arguments: {'email': encodedEmail});
             },
             backgroundColor: Colors.deepPurple,
             child: const Icon(Icons.check, color: Colors.white),

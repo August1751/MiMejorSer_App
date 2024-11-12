@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import './validators.dart';
 import './user_controller.dart';
-import '../pages/home.dart';
 
 class LoginController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -24,7 +23,7 @@ class LoginController extends GetxController {
       var user = userController.findUserByEmail(emailController.text);
       if (user != null && user.password == passwordController.text) {
         String encodedEmail = _encodeEmail(emailController.text);
-        Get.to(const Home(),arguments: {'email': encodedEmail}); // Navega a Home si el login es exitoso
+        Get.toNamed('/home',arguments: {'email': encodedEmail}); // Navega a Home si el login es exitoso
       } else {
         Get.snackbar(
           'Error',

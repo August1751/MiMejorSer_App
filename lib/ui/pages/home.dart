@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
 import 'package:intl/intl.dart'; // Para formatear la fecha
-import '../pages/puntos_page.dart'; // Importar la nueva página de puntos
 
 class Home extends StatefulWidget {
   @override
@@ -43,58 +42,45 @@ class _HomeState extends State<Home> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-  title: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        user?.username ?? 'Usuario',
-        style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-      SizedBox(height: 4),
-      Text(
-        'Fecha: $formattedDate',
-        style: TextStyle(fontSize: 14, color: Colors.white),
-      ),
-    ],
-  ),
-  flexibleSpace: Container(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFFD4A5FF), Color(0xFFA5E6FF)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    ),
-  ),
-  actions: [
-    IconButton(
-      icon: Icon(Icons.calendar_today),
-      onPressed: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: currentDate,
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-        );
-        if (pickedDate != null) {
-          setState(() {
-            currentDate = pickedDate;
-            userController.setUserDateTime(encodedEmail, currentDate);
-            controller.reiniciarMetasDiarias();
-            userController.addMetasToUser(encodedEmail, controller.metas);
-          });
-        }
-      },
-    ),
-    IconButton(
-      icon: Icon(Icons.star),
-      onPressed: () {
-        Get.to(PuntosPage(), arguments: {'email': encodedEmail});
-      },
-    ),
-  ],
-),
-
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(user?.username ?? 'Usuario',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 4),
+              Text('Fecha: $formattedDate',
+                  style: TextStyle(fontSize: 14, color: Colors.white)),
+            ],
+          ),
+          backgroundColor: Colors.purple,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: currentDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+                if (pickedDate != null) {
+                  setState(() {
+                    currentDate = pickedDate;
+                    userController.setUserDateTime(encodedEmail, currentDate);
+                    controller.reiniciarMetasDiarias();
+                    userController.addMetasToUser(encodedEmail, controller.metas);
+                  });
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.star), // Ícono para ir a la página de puntos
+              onPressed: () {
+                Get.to(PuntosPage(), arguments: {'email': encodedEmail});
+              },
+            ),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

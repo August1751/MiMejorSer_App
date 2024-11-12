@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'iniciar_sesion.dart';
 
 class Start extends StatefulWidget {
   Start({super.key});
@@ -62,7 +61,7 @@ class _StartState extends State<Start> {
       ),
       w2: ElevatedButton(
         onPressed: () {
-          Get.to(const LoginScreen(email: 'blank', password: 'blank'));
+          Get.toNamed('/login');
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurple, // Color del botón
