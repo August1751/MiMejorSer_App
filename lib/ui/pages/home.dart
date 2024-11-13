@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../storage/metas_model.dart';
 import '../Controllers/metas_controller.dart';
 import '../Controllers/user_controller.dart'; // Importar UserController para acceder a los usuarios
 import 'package:intl/intl.dart'; // Para formatear la fecha
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
     final arguments = Get.arguments;
     final encodedEmail = arguments['email'];
     final UserController userController = Get.find<UserController>();
-    final user = userController.users.firstWhereOrNull(
+    final user = userController.userBox.values.firstWhere(
         (u) => userController.encodeEmail(u.email) == encodedEmail);
     currentDate = user?.dateTime ?? DateTime.now();
   }
@@ -31,7 +32,7 @@ class _HomeState extends State<Home> {
     final arguments = Get.arguments;
     final encodedEmail = arguments['email'];
     final UserController userController = Get.find<UserController>();
-    final user = userController.users.firstWhereOrNull(
+    final user = userController.userBox.values.firstWhere(
         (u) => userController.encodeEmail(u.email) == encodedEmail);
 
     final MetasController controller = Get.put(

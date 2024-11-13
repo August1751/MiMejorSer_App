@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../storage/user_model.dart';
+import '../storage/metas_model.dart';
 import 'ui/Controllers/user_controller.dart';
 import 'ui/pages/start.dart';
 import 'ui/pages/iniciar_sesion.dart';
@@ -11,7 +13,7 @@ import 'ui/pages/puntos_page.dart';
 import 'ui/pages/home.dart';
 
 
-void main() {
+void main() async{
   await Hive.initFlutter();
 
   Hive.registerAdapter(UserAdapter());

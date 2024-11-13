@@ -3,10 +3,6 @@ import 'package:get/get.dart';
 import 'dart:convert'; // Para usar la función de hashing
 import './user_controller.dart';
 import './validators.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'dart:convert';
-import './user_controller.dart';
 
 class SignUpController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -46,21 +42,6 @@ class SignUpController extends GetxController {
   String _encodeEmail(String email) {
     return base64Url.encode(utf8.encode(email));
   }
-
-  // Validators
-  String? validateUsername(String? value) {
-    // Add your validation logic
-  }
-
-  String? validateEmail(String? value) {
-    // Add your validation logic
-  }
-
-  String? validatePassword(String? value) {
-    // Add your validation logic
-  }
-}
-
 
   // Validadores del formulario
   String? validateUsername(String? value) {

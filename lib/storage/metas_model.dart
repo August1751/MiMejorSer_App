@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'meta.g.dart'; // Generated file for Hive adapters
+part 'metas_model.g.dart'; // Generated file for Hive adapters
 
 @HiveType(typeId: 1)
 abstract class Meta extends HiveObject {

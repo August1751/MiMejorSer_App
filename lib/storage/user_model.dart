@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
-import './metas_controller.dart'; // Assuming you have imported the Meta class
+import './metas_model.dart'; // Assuming you have imported the Meta class
 
-part 'user.g.dart'; // Hive-generated file
+part 'user_model.g.dart'; // Hive-generated file
 
 @HiveType(typeId: 0)
 class User extends HiveObject {

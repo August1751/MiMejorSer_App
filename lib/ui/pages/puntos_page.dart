@@ -22,7 +22,7 @@ class _PuntosPageState extends State<PuntosPage> {
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
     final encodedEmail = arguments['email'];
-    final user = userController.users.firstWhereOrNull(
+    final user = userController.userBox.values.firstWhere(
         (u) => userController.encodeEmail(u.email) == encodedEmail);
     final int userPuntos = user?.puntos ?? 0;
     final MetasController controller = Get.put(

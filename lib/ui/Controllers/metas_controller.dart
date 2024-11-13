@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import '.:/../storage/s_model.dart'; // Import the Meta classes
+import '../../storage/metas_model.dart'; // Import the Meta classes
 
 class MetasController extends GetxController {
   var metas = <Meta>[].obs;
@@ -14,6 +14,18 @@ class MetasController extends GetxController {
     metas.addAll(metaBox.values);
   }
 
+  MetasController({List<dynamic>? initialMetas}) {
+    if (initialMetas != null) {
+      for (var meta in initialMetas) {
+        if (meta is MetaBooleana) {
+          metas.add(meta);
+        } else if (meta is MetaCuantificable) {
+          metas.add(meta);
+        }
+      }
+    }
+  }
+  
   void addMeta(Meta meta) {
     metaBox.add(meta); // Add meta to Hive box
     metas.add(meta);   // Add meta to observable list
@@ -71,5 +83,51 @@ class MetasController extends GetxController {
       metaBox.putAt(i, meta); // Update in Hive
     }
     update();
+  }
+}
+
+class MetasPageController extends GetxController {
+  // Listas observables para metas y seleccionadas
+  var metas = <Meta>[].obs;
+  var selected = <bool>[].obs;
+
+  // Constructor para inicializar el controlador con metas por defecto
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeDefaultMetas();
+  }
+
+  void _initializeDefaultMetas() {
+    metas.addAll([
+      MetaBooleana('Hidratarse'),
+      MetaBooleana('Dormir siesta'),
+      MetaCuantificable('Comer frutas', 3),
+      MetaBooleana('Hacer ejercicio'),
+      MetaBooleana('Leer un libro')
+    ]);
+    selected.addAll([
+      false,
+      false,
+      false,
+      false,
+      false
+    ]); // Inicialmente, todas las metas no están completadas
+  }
+  void addMetaBooleana(String nombre) {
+    metas.add(MetaBooleana(nombre));
+    selected.add(false); // Inicialmente no completada
+  }
+
+  // Método para agregar una nueva meta cuantificable
+  void addMetaCuantificable(String nombre, double valorObjetivo) {
+    metas.add(MetaCuantificable(nombre, valorObjetivo));
+    selected.add(false); // Inicialmente no completada
+  }
+
+  // Método para actualizar el estado de completitud de una meta
+  void updateCompletion(int index, bool isSelected) {
+    selected[index] = isSelected; // Actualizar el estado de completitud
+    // La lista observable 'selected' hará que Obx reconstruya cuando haya cambios
   }
 }
